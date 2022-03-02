@@ -1,8 +1,6 @@
 module project.view {
     requires javafx.controls;
     requires javafx.fxml;
-
-
-    opens project.view to javafx.fxml;
+    requires Model;
     exports project.view;
 }
