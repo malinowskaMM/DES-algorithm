@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="project.view.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox alignment="CENTER" prefHeight="580.0" prefWidth="684.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="project.view.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="610.0" prefWidth="678.0">
+         <children>
+            <Label layoutX="25.0" layoutY="14.0" prefHeight="26.0" prefWidth="77.0" text="Klucz">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <Label layoutX="36.0" layoutY="42.0" />
+            <Label layoutX="36.0" layoutY="50.0" prefHeight="18.0" prefWidth="111.0" text="Wartość klucza" />
+            <TextField layoutX="36.0" layoutY="66.0" prefHeight="26.0" prefWidth="198.0" />
+            <Label layoutX="279.0" layoutY="51.0" text="Wygeneruj wartość klucza" />
+            <Button layoutX="296.0" layoutY="66.0" mnemonicParsing="false" text="Wygeneruj klucz" />
+            <Button layoutX="467.0" layoutY="66.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="154.0" text="Wczytaj klucz z pliku" />
+            <Button layoutX="467.0" layoutY="28.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="154.0" text="Zapisz klucz do pliku" />
+            <Label layoutX="23.0" layoutY="110.0" prefHeight="28.0" prefWidth="248.0" text="Szyfrowanie/deszyfrowanie">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+            <RadioButton layoutX="59.0" layoutY="148.0" mnemonicParsing="false" text="Plik" />
+            <RadioButton layoutX="60.0" layoutY="173.0" mnemonicParsing="false" text="Okno" />
+            <TextArea layoutX="58.0" layoutY="223.0" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea layoutX="387.0" layoutY="223.0" prefHeight="200.0" prefWidth="200.0" />
+            <Button layoutX="296.0" layoutY="270.0" mnemonicParsing="false" text="Szyfruj" />
+            <Button layoutX="290.0" layoutY="323.0" mnemonicParsing="false" text="Deszyfruj" />
+            <Label layoutX="57.0" layoutY="205.0" text="Tekst jawny" />
+            <Label layoutX="387.0" layoutY="205.0" text="Szyfrogram" />
+            <Button layoutX="79.0" layoutY="442.0" mnemonicParsing="false" text="Wczytaj tekst jawny z pliku" />
+            <Button layoutX="408.0" layoutY="442.0" mnemonicParsing="false" text="Wczytaj szyfrogram z pliku" />
+            <Button layoutX="78.0" layoutY="479.0" mnemonicParsing="false" text="Zapisz tekst jawny do pliku" />
+            <Button layoutX="407.0" layoutY="479.0" mnemonicParsing="false" text="Zapisz szyfrogram do pliku" />
+         </children>
+      </AnchorPane>
+   </children>
 </VBox>
