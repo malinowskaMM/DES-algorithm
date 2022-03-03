@@ -48,7 +48,7 @@ public class HelloController {
 
     @FXML
     protected void onFileRadioButtonSelected() {
-        file.setDisable(false);
+        file.setDisable(true);
         window.setDisable(true);
         plaintext.setDisable(true);
         cryptogram.setDisable(true);
@@ -57,7 +57,7 @@ public class HelloController {
     @FXML
     protected void onWindowRadioButtonSelected() {
         file.setDisable(true);
-        window.setDisable(false);
+        window.setDisable(true);
         plaintextLoad.setDisable(true);
         cryptogramLoad.setDisable(true);
     }
