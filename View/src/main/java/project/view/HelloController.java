@@ -125,7 +125,7 @@ public class HelloController {
     @FXML
     protected void setClearPlaintext(ActionEvent event) {
         plaintext.clear();
-        plainTextStringBuilder.delete(0,plainTextStringBuilder.length()-1);
+        //plainTextStringBuilder.delete(0,plainTextStringBuilder.length()-1);
     }
 
     @FXML
