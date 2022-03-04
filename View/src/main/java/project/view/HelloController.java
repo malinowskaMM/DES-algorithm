@@ -1,136 +1,119 @@
 package project.view;
 import java.io.*;
-
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class HelloController {
-    StringBuilder plainTextStringBuilder;
-    String plainTextString;
-    @FXML
-    private TextField key;
-    @FXML
-    private TextArea plaintext;
-    @FXML
-    private TextArea cryptogram;
+    StringBuilder plaintextStringBuilder;
+    StringBuilder cryptogramStringBuilder;
+    String plaintextString;
+    String cryptogramString;
+    JFileChooser jfc;
+
 
     @FXML
-    private RadioButton file;
+    private TextField keyField;
     @FXML
-    private RadioButton window;
+    private TextArea plaintextArea;
+    @FXML
+    private TextArea cryptogramArea;
+
 
     @FXML
-    private Button choosen;
+    private Button keyGenerateButton;
     @FXML
-    private Button keyGenerate;
+    private Button keySaveButton;
     @FXML
-    private Button keySave;
+    private Button keyLoadButton;
     @FXML
-    private Button keyLoad;
+    private Button encryptButton;
     @FXML
-    private Button encrypt;
+    private Button decryptButton;
     @FXML
-    private Button decrypt;
+    private Button plaintextLoadButton;
     @FXML
-    private Button plaintextLoad;
+    private Button plaintextSaveButton;
     @FXML
-    private Button plaintextSave;
+    private Button cryptogramLoadButton;
     @FXML
-    private Button cryptogramLoad;
+    private Button cryptogramSaveButton;
     @FXML
-    private Button cryptogramSave;
+    private Button plaintextClearButton;
     @FXML
-    private Button clearPlaintext;
-    @FXML
-    private Button clearCryptogram;
+    private Button cryptogramClearButton;
 
-    @FXML
-    protected void onFileRadioButtonSelected() {
-        file.setDisable(true);
-        window.setDisable(true);
-        plaintext.setDisable(true);
-        cryptogram.setDisable(true);
+    private StringBuilder getTextFromFile(File file) throws IOException {
+        FileReader fileReader = new FileReader(file);
+        StringBuilder textBuilder = new StringBuilder();
+        int i;
+        while( (i=fileReader.read()) != -1 ) {
+            textBuilder.append((char)i);
+        }
+        return textBuilder;
+    }
+
+    private void saveToFile(TextArea textArea) throws IOException {
+        int returnValue = jfc.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = jfc.getSelectedFile();
+            File file = new File(String.valueOf(selectedFile));
+            try (FileWriter fw = new FileWriter(file)) {
+                fw.write(textArea.getText());
+                fw.flush();
+            }
+        }
     }
 
     @FXML
-    protected void onWindowRadioButtonSelected() {
-        file.setDisable(true);
-        window.setDisable(true);
-        plaintextLoad.setDisable(true);
-        cryptogramLoad.setDisable(true);
+    public void initialize() {
+        jfc = new JFileChooser();
     }
 
-    @FXML
-    protected void clearSelected(ActionEvent event) {
-        file.setSelected(false);
-        window.setSelected(false);
-        file.setDisable(false);
-        window.setDisable(false);
-        plaintext.setDisable(false);
-        cryptogram.setDisable(false);
-        plaintextLoad.setDisable(false);
-        cryptogramLoad.setDisable(false);
-    }
 
     @FXML
     protected void loadTextFromFile(ActionEvent event) throws IOException {
-        JFileChooser jfc = new JFileChooser();
-
         int returnValue = jfc.showOpenDialog(null);
-
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
-            System.out.println(selectedFile.getAbsolutePath());
-            FileReader fileReader = new FileReader(selectedFile);
-            plainTextStringBuilder = new StringBuilder();
-            int i;
-            while( (i=fileReader.read()) != -1 ) {
-                plainTextStringBuilder.append((char)i);
-            }
-            plainTextString=plainTextStringBuilder.toString();
-            plaintext.setText(plainTextString);
+            plaintextStringBuilder = getTextFromFile(selectedFile);
+            plaintextString = plaintextStringBuilder.toString();
+            plaintextArea.setText(plaintextString);
         }
     }
 
     @FXML
-    protected void saveTextFromPlaintextWindow(ActionEvent event) {
-        File dir = null;
-        JFileChooser fc = new JFileChooser();
-        //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnValue = fc.showSaveDialog(null);
+    protected void loadCryptogramFromFile(ActionEvent event) throws IOException {
+        int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            dir = fc.getSelectedFile();
-        }
-        plainTextString= plaintext.getText();
-        File file = new File(String.valueOf(dir));
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(file);
-            fw.write(plainTextString.toString());
-            fw.flush();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if(fw != null) {
-                try {
-                    fw.close();
-                } catch (IOException ex) {
-                }
-            }
+            File selectedFile = jfc.getSelectedFile();
+            cryptogramStringBuilder = getTextFromFile(selectedFile);
+            cryptogramString = cryptogramStringBuilder.toString();
+            cryptogramArea.setText(cryptogramString);
         }
     }
 
     @FXML
-    protected void setClearPlaintext(ActionEvent event) {
-        plaintext.clear();
-        //plainTextStringBuilder.delete(0,plainTextStringBuilder.length()-1);
+    protected void saveTextFromPlaintextWindow(ActionEvent event) throws IOException {
+        saveToFile(plaintextArea);
     }
 
     @FXML
-    protected void setClearCryptogram(ActionEvent event) {
-        cryptogram.clear();
+    protected void saveTextFromCryptogramWindow(ActionEvent event) throws IOException {
+        saveToFile(cryptogramArea);
+    }
+
+    @FXML
+    protected void setPlaintextClearButton(ActionEvent event) {
+        plaintextArea.clear();
+    }
+
+    @FXML
+    protected void setCryptogramClearButton(ActionEvent event) {
+        cryptogramArea.clear();
     }
 
 }
