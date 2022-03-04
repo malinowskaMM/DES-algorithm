@@ -12,7 +12,7 @@ public class HelloController {
     StringBuilder cryptogramStringBuilder;
     String plaintextString;
     String cryptogramString;
-    JFileChooser jfc;
+
 
 
     @FXML
@@ -57,6 +57,7 @@ public class HelloController {
     }
 
     private void saveToFile(TextArea textArea) throws IOException {
+        JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showSaveDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
@@ -68,14 +69,15 @@ public class HelloController {
         }
     }
 
-    @FXML
-    public void initialize() {
-        jfc = new JFileChooser();
-    }
+//    @FXML
+//    public void initialize() {
+//        JFileChooser jfc = new JFileChooser();
+//    }
 
 
     @FXML
     protected void loadTextFromFile(ActionEvent event) throws IOException {
+        JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
@@ -87,6 +89,7 @@ public class HelloController {
 
     @FXML
     protected void loadCryptogramFromFile(ActionEvent event) throws IOException {
+        JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
