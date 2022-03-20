@@ -5,10 +5,13 @@ import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import project.model.TripleDes;
 
 public class HelloController {
     StringBuilder plaintextStringBuilder;
     StringBuilder cryptogramStringBuilder;
+    TripleDes tripleDes = new TripleDes();
     String plaintextString;
     String cryptogramString;
     byte[] byteArea;
@@ -19,6 +22,8 @@ public class HelloController {
     private TextArea plaintextArea;
     @FXML
     private TextArea cryptogramArea;
+    @FXML
+    private TextField keyField;
 
     private byte[] getByteAreaFromFile(File file) throws IOException {
         FileReader fileReader = new FileReader(file);
@@ -94,6 +99,11 @@ public class HelloController {
     @FXML
     protected void setCryptogramClearButton(ActionEvent event) {
         cryptogramArea.clear();
+    }
+
+    @FXML
+    protected void onKeyGenerateButtonClicked() {
+        keyField.setText(tripleDes.getKey());
     }
 
 }
