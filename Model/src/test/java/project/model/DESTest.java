@@ -3,6 +3,7 @@ package project.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.BitSet;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,12 +41,38 @@ class DESTest {
         //set2.stream().forEach(System.out::print);
     }
 
-    @Test public void permuteAndSplitKey() {
+    @Test
+    public void generate16keys() {
         BitSet key = new BitSet(64);
-        key.set(0, 64);
-        BitSet[] newKey = des.permuteAndSplitKey(key);
-        assertTrue(newKey[0].length() <= 28);
-        assertTrue(newKey[1].length() <= 28);
+        for (int i = 0; i < 64; i++) {
+            if ((i % 2 == 0) && (i % 5 != 0)) {
+                key.set(i);
+            }
+        }
+
+        List<BitSet[]> keys = des.generate16keys(key);
+
+        for (int i = 0; i < 15; i++) {
+            int cardinalityPrevLeft = keys.get(i)[0].cardinality();
+            int cardinalityPrevRight = keys.get(i)[1].cardinality();
+            int cardinalityNextLeft = keys.get(i + 1)[0].cardinality();
+            int cardinalityNextRight = keys.get(i + 1)[1].cardinality();
+            assertEquals(cardinalityPrevLeft, cardinalityNextLeft);
+            assertEquals(cardinalityPrevRight, cardinalityNextRight);
+            assertTrue(keys.get(i)[0].length() <= 28);
+            assertTrue(keys.get(i)[1].length() <= 28);
+        }
+    }
+
+    @Test
+    public void leftShiftTest() {
+        BitSet subKey = new BitSet(28);
+        subKey.set(0, 2);
+        subKey.set(26, 28);
+        assertTrue(subKey.length() <= 28);
+        BitSet result = des.leftShift(subKey, 28, 1);
+        assertTrue(result.length() <= 28);
+        assertEquals(subKey.cardinality(), result.cardinality());
     }
 
     @Test
@@ -56,14 +83,14 @@ class DESTest {
         BitSet[] split = des.split(input, 64);
 
         assertTrue(split[0].get(0));
-        assertTrue(split[0].get(30));
-        assertTrue(split[0].get(31));
+        assertTrue(split[0].get(1));
         assertTrue(split[1].get(0));
-        assertTrue(split[1].get(1));
+        assertTrue(split[1].get(30));
+        assertTrue(split[1].get(31));
         assertTrue(split[0].length() <= 32);
         assertTrue(split[1].length() <= 32);
-        assertEquals(split[0].cardinality(), 3);
-        assertEquals(split[1].cardinality(), 2);
+        assertEquals(split[0].cardinality(), 2);
+        assertEquals(split[1].cardinality(), 3);
     }
 
     @Test
@@ -91,7 +118,4 @@ class DESTest {
         assertTrue(output.length() <= 10);
         assertEquals(output.cardinality(), input.cardinality());
     }
-
-
-
 }
