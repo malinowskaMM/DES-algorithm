@@ -15,6 +15,15 @@ public class BitOperations {
         return result;
     }
 
+    public BitSet concatenation(BitSet left, BitSet right, int sizeOfHalf) {
+        for(int i = 0; i < sizeOfHalf; i++) {
+            if(right.get(i)) {
+                left.set(i + sizeOfHalf);
+            }
+        }
+        return left;
+    }
+
     public BitSet[] split(BitSet block, int size) {
         int splitIndex = size / 2;
 
