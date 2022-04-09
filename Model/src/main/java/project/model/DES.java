@@ -57,9 +57,16 @@ public class DES {
               2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11}
     };
 
-    public int getFromSBox(int boxNum, int row, int column) {
-        return SBoxes[boxNum][16 * row + column];
-    }
+    public int[] PPermutationTable = {
+            16,  7, 20, 21,
+            29, 12, 28, 17,
+             1, 15, 23, 26,
+             5, 18, 31, 10,
+             2,  8, 24, 14,
+            32, 27,  3,  9,
+            19, 13, 30,  6,
+            22, 11,  4, 25
+    };
 
     public int[] initialPermutationTable = {
             58, 50, 42, 34, 26, 18, 10, 2,
@@ -72,6 +79,17 @@ public class DES {
             63, 55, 47, 39, 31, 23, 15, 7
     };
 
+    public int[] inversedInitialPermutationTable = {
+            40,  8, 48, 16, 56, 24, 64, 32,
+            37,  7, 47, 15, 55, 23, 63, 61,
+            38,  6, 46, 14, 54, 22, 62, 30,
+            37,  5, 45, 13, 53, 21, 61, 29,
+            36,  4, 44, 12, 52, 20, 60, 28,
+            35,  3, 43, 11, 51, 19, 59, 27,
+            34,  2, 42, 10, 50, 18, 58, 26,
+            33,  1, 41,  9, 49, 17, 57, 25
+    };
+
     public int[] expansionPermutationTable = {
             32,  1,  2,  3,  4,  5,
              4,  5,  6,  7,  8,  9,
@@ -82,6 +100,10 @@ public class DES {
             24, 25, 26, 27, 28, 29,
             28, 29, 30, 31, 32,  1
     };
+
+    public int getFromSBox(int boxNum, int row, int column) {
+        return SBoxes[boxNum][16 * row + column];
+    }
 
     public BitSet substitution(BitSet bits) {
         BitSet result = new BitSet(32);
@@ -134,20 +156,46 @@ public class DES {
         return result;
     }
 
+    public BitSet FFunction(BitSet halfBlock, BitSet subKey) {
+        // expansion permutation
+        halfBlock = bo.permutation(halfBlock, expansionPermutationTable);
+        // key mixing
+        halfBlock.xor(subKey);
+        // substitution
+        halfBlock = substitution(halfBlock);
+        // P permutation
+        halfBlock = bo.permutation(halfBlock, PPermutationTable);
+
+        return halfBlock;
+    }
+
     public BitSet cypherOneBlock(BitSet bits) {
         bits = bo.permutation(bits, initialPermutationTable);
         BitSet[] split = bo.split(bits, 64);
         BitSet L0 = split[0];
         BitSet R0 = split[1];
 
-        // expansion permutation
-        R0 = bo.permutation(R0, expansionPermutationTable);
-        // key mixing
-        R0.xor(keys.get(0));
-        // substitution
-        R0 = substitution(R0);
+        BitSet R1 = (BitSet) R0.clone();
+        R1 = FFunction(R1, keys.get(0));
+        R1.xor(L0);
 
-        return null;
+        for (int i = 1; i < 16; i++) {
+            BitSet[] a = oneRound(L0, R1, keys.get(i));
+            L0 = a[1];
+            R1 = a[0];
+        }
+
+        bits = bo.concatenation(L0, R1, 16);
+        bits = bo.permutation(bits, inversedInitialPermutationTable);
+
+        return bits;
+    }
+
+    public BitSet[] oneRound(BitSet left, BitSet right, BitSet subKey) {
+        BitSet R = (BitSet) right.clone();
+        R = FFunction(R, subKey);
+        R.xor(left);
+        return new BitSet[] {right, R};
     }
 
 }

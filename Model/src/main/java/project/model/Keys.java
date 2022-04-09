@@ -74,12 +74,7 @@ public class Keys {
         List<BitSet> keysConcat = new ArrayList<>();
         // concatenate each key right to left
         for(var subKey: keys) {
-            BitSet concatenated = (BitSet)subKey[0].clone();
-            for(int i = 0; i < 28; i++) {
-                if(subKey[1].get(i)) {
-                    concatenated.set(i + 28);
-                }
-            }
+            BitSet concatenated = bo.concatenation(subKey[0], subKey[1], 28);
             keysConcat.add(concatenated);
         }
 
