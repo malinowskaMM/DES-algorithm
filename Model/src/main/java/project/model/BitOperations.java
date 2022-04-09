@@ -61,4 +61,13 @@ public class BitOperations {
 
         return result;
     }
+
+    public int bitSetToInt(BitSet bs) {
+        long[] l = bs.toLongArray();
+        return (int)l[0];
+    }
+
+    public BitSet intToBitSet(int value) {
+        return BitSet.valueOf(new long[]{value});
+    }
 }

@@ -69,4 +69,33 @@ class BitOperationsTest {
         assertTrue(output.length() <= 10);
         assertEquals(output.cardinality(), input.cardinality());
     }
+
+    @Test
+    public void bitSetToIntTest() {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(4);
+        int v = bo.bitSetToInt(bs);
+        assertEquals(v, 17);
+
+        bs.set(2);
+        v = bo.bitSetToInt(bs);
+        assertEquals(v, 21);
+    }
+
+    @Test
+    public void intToBitSetTest() {
+        int v = 3;
+        BitSet bs = bo.intToBitSet(v);
+        assertEquals(bs.cardinality(), 2);
+        assertTrue(bs.get(0));
+        assertTrue(bs.get(1));
+
+        v = 25;
+        bs = bo.intToBitSet(v);
+        assertEquals(bs.cardinality(), 3);
+        assertTrue(bs.get(0));
+        assertTrue(bs.get(3));
+        assertTrue(bs.get(4));
+    }
 }
