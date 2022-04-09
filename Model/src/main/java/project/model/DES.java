@@ -6,13 +6,17 @@ import java.util.List;
 
 public class DES {
     public int[] initialPermutationTable = {
-            58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
-            62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
-            57, 49, 41, 33, 25, 17, 9,  1, 59, 51, 43, 35, 27, 19, 11, 3,
-            61, 33, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7
+            58, 50, 42, 34, 26, 18, 10, 2,
+            60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6,
+            64, 56, 48, 40, 32, 24, 16, 8,
+            57, 49, 41, 33, 25, 17, 9,  1,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            61, 53, 45, 37, 29, 21, 13, 5,
+            63, 55, 47, 39, 31, 23, 15, 7
     };
 
-    public int[] firstKeyPermutationTable = {
+    public int[] PC1KeyPermutationTable = {
             57, 49, 41, 33, 25, 17,  9,
             1,  58, 50, 42, 34, 26, 18,
             10,  2, 59, 51, 43, 35, 27,
@@ -21,6 +25,21 @@ public class DES {
             7,  62, 54, 46, 38, 30, 22,
             14,  6, 61, 53, 45, 37, 29,
             21, 13, 13, 28, 20, 12,  4
+    };
+
+    public int[] PC2KeyPermutationTable = {
+            14, 17, 11, 24,  1,  5,
+            3,  28, 15,  6, 21, 10,
+            23, 19, 12,  4, 26,  8,
+            16,  7, 27, 20, 13,  2,
+            41, 52, 31, 37, 47, 55,
+            30, 40, 51, 45, 33, 48,
+            44, 49, 39, 56, 34, 53,
+            46, 42, 50, 36, 29, 32
+    };
+
+    public int[] keyLeftShiftTable = {
+            1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
     };
 
     public BitSet permutation(BitSet bits, int[] table) {
@@ -62,20 +81,18 @@ public class DES {
         return new BitSet[] {L0, R0};
     }
 
-    public int[] keyLeftShiftTable = {
-            1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
-    };
 
-    public List<BitSet[]> generate16keys(BitSet key) {
+    public List<BitSet> generate16keys(BitSet key) {
         key = removeParityBitsFromKey(key);
-        BitSet permutedKey = permutation(key, firstKeyPermutationTable);
-        BitSet[] splitKey = split(permutedKey, 28);
+        BitSet permutedKey = permutation(key, PC1KeyPermutationTable);
+        BitSet[] splitKey = split(permutedKey, 56);
         BitSet leftSubKey = splitKey[0];
         BitSet rightSubKey = splitKey[1];
 
         leftSubKey = leftShift(leftSubKey, 28, 1);
         rightSubKey = leftShift(rightSubKey, 28, 1);
         BitSet[] firstKey = {leftSubKey, rightSubKey};
+
 
         List<BitSet[]> keys = new ArrayList<>();
         keys.add(firstKey);
@@ -87,7 +104,25 @@ public class DES {
             keys.add(nextKey);
         }
 
-        return keys;
+        List<BitSet> keysConcat = new ArrayList<>();
+        // concatenate each key right to left
+        for(var subKey: keys) {
+            BitSet concatenated = (BitSet)subKey[0].clone();
+            for(int i = 0; i < 28; i++) {
+                if(subKey[1].get(i)) {
+                    concatenated.set(i + 28);
+                }
+            }
+            keysConcat.add(concatenated);
+        }
+
+        List<BitSet> finalKeys = new ArrayList<>();
+        for(BitSet k: keysConcat) {
+            BitSet finalKey = permutation(k, PC2KeyPermutationTable);
+            finalKeys.add(finalKey);
+        }
+
+        return finalKeys;
     }
 
     public BitSet leftShift(BitSet key, int size, int shift) {

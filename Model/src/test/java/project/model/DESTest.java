@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.BitSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,8 +43,27 @@ class DESTest {
         //set2.stream().forEach(System.out::print);
     }
 
+    // for debugging
+    @Test void checkTableForDuplicates() {
+        int[] table = des.PC2KeyPermutationTable;
+        Set a = new TreeSet();
+        int tableSize = table.length;
+        for(int element: table) {
+            a.add(element);
+        }
+        int setSize = a.size();
+
+//        System.out.printf("table size: %d, set size: %d\n", tableSize, setSize);
+//        Arrays.sort(table);
+//        a.forEach(System.out::println);
+//        for(var x: table) {
+//            System.out.println(x);
+//        }
+//        assertEquals(tableSize, setSize);
+    }
+
     @Test
-    public void generate16keys() {
+    public void generate16keysTest() {
         BitSet key = new BitSet(64);
         for (int i = 0; i < 64; i++) {
             if ((i % 2 == 0) && (i % 5 != 0)) {
@@ -50,17 +71,10 @@ class DESTest {
             }
         }
 
-        List<BitSet[]> keys = des.generate16keys(key);
+        List<BitSet> keys = des.generate16keys(key);
 
         for (int i = 0; i < 15; i++) {
-            int cardinalityPrevLeft = keys.get(i)[0].cardinality();
-            int cardinalityPrevRight = keys.get(i)[1].cardinality();
-            int cardinalityNextLeft = keys.get(i + 1)[0].cardinality();
-            int cardinalityNextRight = keys.get(i + 1)[1].cardinality();
-            assertEquals(cardinalityPrevLeft, cardinalityNextLeft);
-            assertEquals(cardinalityPrevRight, cardinalityNextRight);
-            assertTrue(keys.get(i)[0].length() <= 28);
-            assertTrue(keys.get(i)[1].length() <= 28);
+            assertTrue(keys.get(i).length() <= 48);
         }
     }
 
