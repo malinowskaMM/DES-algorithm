@@ -17,13 +17,20 @@ class BitOperationsTest {
 
     @Test
     public void leftShiftTest() {
-        BitSet subKey = new BitSet(28);
+        BitSet subKey = new BitSet(6);
         subKey.set(0, 2);
-        subKey.set(26, 28);
-        assertTrue(subKey.length() <= 28);
-        BitSet result = bo.leftShift(subKey, 28, 1);
-        assertTrue(result.length() <= 28);
-        assertEquals(subKey.cardinality(), result.cardinality());
+        subKey.set(3);
+        assertTrue(subKey.length() <= 6);
+        assertEquals(subKey.cardinality(), 3);
+
+        BitSet result = bo.leftShift(subKey, 6, 1);
+
+        assertTrue(result.length() <= 6);
+        assertEquals(result.cardinality(), 3);
+
+        assertTrue(result.get(1));
+        assertTrue(result.get(2));
+        assertTrue(result.get(4));
     }
 
     @Test
@@ -53,6 +60,7 @@ class BitOperationsTest {
         input.set(3);
         input.set(6);
         input.set(9);
+        assertEquals(input.cardinality(), 5);
         BitSet output = bo.permutation(input, table);
 
         assertFalse(output.get(0));
@@ -67,7 +75,7 @@ class BitOperationsTest {
         assertTrue(output.get(9));
         assertTrue(input.length() <= 10);
         assertTrue(output.length() <= 10);
-        assertEquals(output.cardinality(), input.cardinality());
+        assertEquals(output.cardinality(), 5);
     }
 
     @Test
