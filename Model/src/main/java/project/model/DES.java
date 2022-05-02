@@ -8,11 +8,8 @@ public class DES {
     BitOperations bo = new BitOperations();
     List<BitSet> keys;
 
-    public DES() {
-        BitSet initialKey = new BitSet(64);
-        initialKey.set(2, 8);
-        Keys k = new Keys();
-        keys = k.generate16keys(initialKey);
+    public DES(List<BitSet> keys) {
+        this.keys = keys;
     }
 
     public int[][] SBoxes = {
@@ -136,16 +133,17 @@ public class DES {
             if(value1Bin.isEmpty()) {
                 value1Dec = 0;
             } else {
-                value1Dec = bo.bitSetToInt(value1Bin);
+                value1Dec = bo.bitSetToInt(value1Bin, 2);
             }
             if(value2Bin.isEmpty()) {
                 value2Dec = 0;
             } else {
-                value2Dec = bo.bitSetToInt(value2Bin);
+                value2Dec = bo.bitSetToInt(value2Bin, 4);
             }
 
-            int valueFromSBox = getFromSBox(7 - i, value1Dec, value2Dec);
-            BitSet valueFromSBoxBin = bo.intToBitSet(valueFromSBox);
+            int valueFromSBox = getFromSBox(i, value1Dec, value2Dec);
+//            int valueFromSBox = getFromSBox(7 - i, value1Dec, value2Dec);
+            BitSet valueFromSBoxBin = bo.intToBitSet(valueFromSBox, 4);
             for (int n = 0; n < 4; n++) {
                 if(valueFromSBoxBin.get(n)) {
                     result.set(4 * i + n);
@@ -181,11 +179,10 @@ public class DES {
 
         for (int i = 1; i < 16; i++) {
             BitSet[] a = oneRound(L0, R1, keys.get(i));
-            L0 = a[1];
-            R1 = a[0];
+            L0 = a[0];
+            R1 = a[1];
         }
-
-        bits = bo.concatenation(L0, R1, 16);
+        bits = bo.concatenation(R1, L0, 32); // R1, L0 in reverse order to cancel out reversion in oneRound()
         bits = bo.permutation(bits, inversedInitialPermutationTable);
 
         return bits;

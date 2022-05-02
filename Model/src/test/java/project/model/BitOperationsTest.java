@@ -3,6 +3,7 @@ package project.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.BitSet;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,21 +35,54 @@ class BitOperationsTest {
     }
 
     @Test
+    public void reverseKeysOrderTest() {
+        Keys k = new Keys();
+        BitSet key = new BitSet(64);
+        for (int i = 0; i < 64; i++) {
+            if ((i % 2 == 0) && (i % 5 != 0)) {
+                key.set(i);
+            }
+        }
+        List<BitSet> keyList = k.generate16keys(key);
+
+        BitOperations bo = new BitOperations();
+        List<BitSet> reversed = bo.reverseKeysOrder(keyList);
+        for(int i = 0; i < 16; i ++) {
+            assertEquals(keyList.get(i), reversed.get(15 - i));
+        }
+    }
+
+    @Test
+    public void bitSetToStringTest() {
+        BitSet bs = new BitSet(64);
+        assertEquals(bo.bitSetToString(bs),
+                "0000000000000000000000000000000000000000000000000000000000000000");
+
+        bs.set(0);
+        bs.set(3);
+        bs.set(11);
+        bs.set(15);
+        assertEquals(bo.bitSetToString(bs),
+                "1001000000010001000000000000000000000000000000000000000000000000");
+    }
+
+    @Test
     public void splitTest() {
         BitSet input = new BitSet(64);
         input.set(0);
         input.set(30, 34);
+        assertEquals(input.cardinality(), 5);
         BitSet[] split = bo.split(input, 64);
 
         assertTrue(split[0].get(0));
-        assertTrue(split[0].get(1));
+        assertTrue(split[0].get(30));
+        assertTrue(split[0].get(31));
         assertTrue(split[1].get(0));
-        assertTrue(split[1].get(30));
-        assertTrue(split[1].get(31));
+        assertTrue(split[1].get(1));
         assertTrue(split[0].length() <= 32);
         assertTrue(split[1].length() <= 32);
-        assertEquals(split[0].cardinality(), 2);
-        assertEquals(split[1].cardinality(), 3);
+        assertEquals(split[0].cardinality(), 3);
+        assertEquals(split[1].cardinality(), 2);
     }
 
     @Test
@@ -83,27 +117,32 @@ class BitOperationsTest {
         BitSet bs = new BitSet();
         bs.set(0);
         bs.set(4);
-        int v = bo.bitSetToInt(bs);
+        int v = bo.bitSetToInt(bs, 5);
         assertEquals(v, 17);
 
-        bs.set(2);
-        v = bo.bitSetToInt(bs);
-        assertEquals(v, 21);
+        bs.set(1);
+        v = bo.bitSetToInt(bs, 5);
+        assertEquals(v, 25);
+
+        bs.clear();
     }
 
     @Test
     public void intToBitSetTest() {
         int v = 3;
-        BitSet bs = bo.intToBitSet(v);
+        BitSet bs = bo.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 2);
-        assertTrue(bs.get(0));
-        assertTrue(bs.get(1));
-
-        v = 25;
-        bs = bo.intToBitSet(v);
-        assertEquals(bs.cardinality(), 3);
-        assertTrue(bs.get(0));
+        assertTrue(bs.get(2));
         assertTrue(bs.get(3));
-        assertTrue(bs.get(4));
+
+        v = 8;
+        bs = bo.intToBitSet(v, 4);
+        assertEquals(bs.cardinality(), 1);
+        assertTrue(bs.get(0));
+
+        v = 1;
+        bs = bo.intToBitSet(v, 4);
+        assertEquals(bs.cardinality(), 1);
+        assertTrue(bs.get(3));
     }
 }

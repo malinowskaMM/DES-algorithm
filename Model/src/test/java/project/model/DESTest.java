@@ -3,6 +3,7 @@ package project.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.BitSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +15,11 @@ class DESTest {
 
     @BeforeEach
     public void initial() {
-        des = new DES();
+        BitSet initialKey = new BitSet(64);
+        initialKey.set(2, 8);
+        Keys k = new Keys();
+        des = new DES(k.generate16keys(initialKey));
     }
-
 
     // unimportant test just to see how class BitSet works
     @Test
@@ -44,6 +47,96 @@ class DESTest {
         //set2.stream().forEach(System.out::print);
     }
 
+    @Test
+    public void FFunctionTest() {
+        BitSet subKey = new BitSet(48);
+        subKey.set(0);
+        subKey.set(3);
+        subKey.set(7, 10);
+        subKey.set(12);
+        subKey.set(47);
+
+        BitSet halfBlock = new BitSet(32);
+        halfBlock.set(1);
+        halfBlock.set(5, 13);
+
+        BitSet result = des.FFunction(halfBlock, subKey);
+        assertEquals(result.cardinality(), 11);
+        assertTrue(result.get(0));
+        assertTrue(result.get(3));
+        assertTrue(result.get(5));
+        assertTrue(result.get(9));
+        assertTrue(result.get(11));
+        assertTrue(result.get(19));
+        assertTrue(result.get(20));
+        assertTrue(result.get(22));
+        assertTrue(result.get(24));
+        assertTrue(result.get(25));
+        assertTrue(result.get(28));
+    }
+
+    @Test
+    public void encryptAndDecryptTest() {
+        Keys k = new Keys();
+        BitSet key = new BitSet(64);
+        for (int i = 0; i < 64; i++) {
+            if ((i % 2 == 0) && (i % 5 != 0)) {
+                key.set(i);
+            }
+        }
+
+        BitSet message = new BitSet(64);
+        for (int i = 0; i < 64; i++) {
+            if ((i % 3 == 0) && (i % 8 != 0)) {
+                message.set(i);
+            }
+        }
+
+        List<BitSet> subKeys = k.generate16keys(key);
+        DES desEncrypt = new DES(subKeys);
+        BitSet encrypted = desEncrypt.cypherOneBlock(message);
+
+        assertEquals(encrypted.size(), message.size());
+        assertNotEquals(encrypted, message);
+
+        BitOperations bo = new BitOperations();
+        List<BitSet> subKeyReversed = bo.reverseKeysOrder(subKeys);
+        DES desDecrypt = new DES(subKeyReversed);
+        BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
+
+
+        // print key
+        System.out.print("\nOriginal message: ");
+        for (int i = 0; i < 64; i++) {
+            if (message.get(i)) {
+                System.out.print("1");
+            } else {
+                System.out.print("0");
+            }
+        }
+
+        // print key
+        System.out.print("\nDecrypted message:");
+        for (int i = 0; i < 64; i++) {
+            if (decrypted.get(i)) {
+                System.out.print("1");
+            } else {
+                System.out.print("0");
+            }
+        }
+
+        // print key
+        System.out.print("\nOriginal key:     ");
+        for (int i = 0; i < 64; i++) {
+            if (key.get(i)) {
+                System.out.print("1");
+            } else {
+                System.out.print("0");
+            }
+        }
+        assertEquals(decrypted, message);
+    }
+
     // for debugging
     @Test void checkTableForDuplicates() {
         Keys k = new Keys();
@@ -65,66 +158,38 @@ class DESTest {
     }
 
     @Test
+    public void getFromSBoxTest() {
+        assertEquals(des.getFromSBox(0, 0, 0), 14);
+        assertEquals(des.getFromSBox(0, 3, 4), 4);
+        assertEquals(des.getFromSBox(2, 3, 12), 11);
+        assertEquals(des.getFromSBox(7, 2, 15), 8);
+    }
+
+    @Test
     public void substitutionTest() {
         BitSet bs = new BitSet(48);
         bs.set(0);
-        bs.set(1);
-        bs.set(7, 9);
+        bs.set(2);
+        bs.set(3);
+        bs.set(7);
         bs.set(10);
-        bs.set(12);
-        bs.set(18);
-        bs.set(20);
-        bs.set(23);
-        bs.set(25, 28);
-        bs.set(30, 32);
-        bs.set(34, 38);
-        bs.set(39, 42);
-        bs.set(45);
+        bs.set(11);
+        bs.set(13, 20);
+        bs.set(47);
 
         BitSet sub = des.substitution(bs);
+        assertEquals(sub.cardinality(), 11);
 
-        assertEquals(sub.cardinality(), 20);
-
-        assertTrue(sub.get(0));
-        assertTrue(sub.get(1));
         assertTrue(sub.get(2));
-        assertTrue(sub.get(3));
-        assertTrue(sub.get(4));
-        assertTrue(sub.get(5));
-        assertTrue(sub.get(6));
-        assertTrue(sub.get(9));
         assertTrue(sub.get(11));
+        assertTrue(sub.get(12));
+        assertTrue(sub.get(13));
         assertTrue(sub.get(14));
         assertTrue(sub.get(15));
-        assertTrue(sub.get(17));
-        assertTrue(sub.get(19));
+        assertTrue(sub.get(18));
         assertTrue(sub.get(20));
         assertTrue(sub.get(21));
-        assertTrue(sub.get(22));
-        assertTrue(sub.get(23));
-        assertTrue(sub.get(24));
-        assertTrue(sub.get(26));
-        assertTrue(sub.get(29));
-
-
-        assertFalse(sub.get(7));
-        assertFalse(sub.get(8));
-        assertFalse(sub.get(10));
-        assertFalse(sub.get(12));
-        assertFalse(sub.get(13));
-        assertFalse(sub.get(16));
-        assertFalse(sub.get(18));
-        assertFalse(sub.get(25));
-        assertFalse(sub.get(27));
-        assertFalse(sub.get(28));
-        assertFalse(sub.get(30));
-        assertFalse(sub.get(31));
+        assertTrue(sub.get(25));
+        assertTrue(sub.get(31));
     }
-
-
-
-
-
-
-
 }

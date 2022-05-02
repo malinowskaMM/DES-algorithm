@@ -1,6 +1,8 @@
 package project.model;
 
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 public class BitOperations {
 
@@ -10,6 +12,25 @@ public class BitOperations {
         for (int i = 0; i < length; i++) {
             if (bits.get(table[i] - 1)) {
                 result.set(i);
+            }
+        }
+        return result;
+    }
+
+    public List<BitSet> reverseKeysOrder(List<BitSet> keyList) {
+        List<BitSet> reversed = new ArrayList<>();
+        int size = keyList.size();
+        for (int i = 0; i < size; i++) {
+            reversed.add(keyList.get(size - i - 1));
+        }
+        return reversed;
+    }
+
+    public BitSet reverseBitOrder(BitSet bits, int length) {
+        BitSet result = new BitSet();
+        for (int i = 0; i < length; i ++) {
+            if(bits.get(i)) {
+                result.set(length - i - 1);
             }
         }
         return result;
@@ -26,14 +47,10 @@ public class BitOperations {
 
     public BitSet[] split(BitSet block, int size) {
         int splitIndex = size / 2;
+        BitSet l = block.get(0, splitIndex);
+        BitSet r = block.get(splitIndex, size);
 
-        // left and right are swapped, because BitSet goes from left to right
-        // but binary notation goes from right (the oldest bit) to left
-        // so L0 in code relates to L0 in a book
-        BitSet L0 = block.get(splitIndex, size);
-        BitSet R0 = block.get(0, splitIndex);
-
-        return new BitSet[] {L0, R0};
+        return new BitSet[] {l, r};
     }
 
     // Shift = 1 or 2
@@ -71,12 +88,34 @@ public class BitOperations {
         return result;
     }
 
-    public int bitSetToInt(BitSet bs) {
-        long[] l = bs.toLongArray();
+    public int bitSetToInt(BitSet bs, int len) {
+        BitSet rev = reverseBitOrder(bs, len);
+        long[] l = rev.toLongArray();
         return (int)l[0];
     }
 
-    public BitSet intToBitSet(int value) {
-        return BitSet.valueOf(new long[]{value});
+    public String bitSetToString(BitSet bs) {
+        StringBuilder result = new StringBuilder("");
+        for (int i = 0; i < bs.size(); i++) {
+            if(bs.get(i)) {
+                result.append("1");
+            } else {
+                result.append("0");
+            }
+        }
+        return result.toString();
+    }
+
+    public BitSet intToBitSet(int value, int len) {
+        BitSet result = new BitSet();
+        for(int i = 0; i < len; i++) {
+            int v = (((value % 2) == 0) ? 0 : 1);
+            if(v == 1) {
+                result.set(len - i - 1);
+            }
+            value /= 2;
+        }
+
+        return result;
     }
 }
