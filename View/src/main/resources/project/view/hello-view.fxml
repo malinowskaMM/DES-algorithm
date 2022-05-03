@@ -21,7 +21,7 @@
             <Label layoutX="36.0" layoutY="33.0" prefHeight="18.0" prefWidth="158.0" text="Wartość klucza pierwszego" textFill="#bcbcbc" />
             <TextField fx:id="key1Field" layoutX="36.0" layoutY="53.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
             <Button id="keyGenerate" fx:id="key1GenerateButton" layoutX="258.0" layoutY="53.0" mnemonicParsing="false" onAction="#generateFirstKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
-            <Button id="keyLoad" fx:id="keysLoadButton" layoutX="412.0" layoutY="150.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Wczytaj klucze z pliku" textFill="WHITE" />
+            <Button id="keyLoad" fx:id="keysLoadButton" layoutX="412.0" layoutY="150.0" mnemonicParsing="false" onAction="#loadKeysFromFile" prefHeight="26.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Wczytaj klucze z pliku" textFill="WHITE" />
             <Button id="keySave" fx:id="keysSaveButton" layoutX="412.0" layoutY="105.0" mnemonicParsing="false" onAction="#saveKeysToFile" prefHeight="18.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Zapisz klucze do pliku" textFill="WHITE" />
             <Label layoutX="37.0" layoutY="202.0" prefHeight="28.0" prefWidth="248.0" text="Szyfrowanie/deszyfrowanie" textFill="#bcbcbc">
                <font>

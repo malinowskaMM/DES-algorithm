@@ -1,6 +1,7 @@
 package project.view;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.BitSet;
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
@@ -111,6 +112,22 @@ public class HelloController {
             }
         }
     }
+
+    @FXML private void loadKeysFromFile() throws IOException {
+        JFileChooser jfc = new JFileChooser();
+        int returnValue = jfc.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = jfc.getSelectedFile();
+            String fromFile = Files.readString(selectedFile.toPath());
+            firstKey = fromString(fromFile.substring(0, 8));
+            key1Field.setText(fromFile.substring(0, 8));
+            secondKey = fromString(fromFile.substring(8, 16));
+            key2Field.setText(fromFile.substring(8, 16));
+            thirdKey = fromString(fromFile.substring(16, 24));
+            key3Field.setText(fromFile.substring(16, 24));
+            }
+        }
+
 
     @FXML protected void initialize() {
         key = new Key();
