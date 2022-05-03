@@ -30,8 +30,8 @@
             </Label>
             <TextArea fx:id="plaintextArea" layoutX="79.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
             <TextArea fx:id="cryptogramArea" layoutX="408.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
-            <Button id="encrypt" fx:id="encryptButton" layoutX="317.0" layoutY="284.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
-            <Button id="decrypt" fx:id="decryptButton" layoutX="311.0" layoutY="348.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Deszyfruj" textFill="WHITE" />
+            <Button id="encrypt" fx:id="encryptButton" layoutX="317.0" layoutY="284.0" mnemonicParsing="false" onAction="#encryptMessage" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
+            <Button id="decrypt" fx:id="decryptButton" layoutX="311.0" layoutY="348.0" mnemonicParsing="false" onAction="#decryptMessage" style="-fx-background-color: #727272;" text="Deszyfruj" textFill="WHITE" />
             <Label layoutX="78.0" layoutY="230.0" text="Tekst jawny" textFill="#bcbcbc" />
             <Label layoutX="408.0" layoutY="230.0" text="Szyfrogram" textFill="#bcbcbc" />
             <Button id="plaintextLoad" fx:id="plaintextLoadButton" layoutX="100.0" layoutY="500.0" mnemonicParsing="false" onAction="#loadTextFromFile" style="-fx-background-color: #727272;" text="Wczytaj tekst jawny z pliku" textFill="WHITE" />

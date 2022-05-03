@@ -22,6 +22,7 @@ public class HelloController {
     BitSet secondKey;
     BitSet thirdKey;
     BitSet encrypted;
+    BitSet decrypted;
     @FXML private TextArea plaintextArea;
     @FXML private TextArea cryptogramArea;
     @FXML private  TextField key1Field;
@@ -220,6 +221,61 @@ public class HelloController {
         encrypted = tripleDES.encrypt(fromString(plaintextArea.toString()));
         cryptogramArea.setText(toString(encrypted));
         return 0;
+    }
+
+    @FXML protected int decryptMessage(ActionEvent event) {
+        if(key1Field.getText().isEmpty()) {
+            openWarningDialog("Brak pierwszego klucza");
+            return -1; }
+        if(key2Field.getText().isEmpty()) {
+            openWarningDialog("Brak drugiego klucza");
+            return -1;}
+        if(key3Field.getText().isEmpty()) {
+            openWarningDialog("Brak trzeciego klucza");
+            return -1;}
+        if(plaintextString.toString().isEmpty()) {
+            openWarningDialog("Pusta wiadomosc do zakodowania");
+            return -1;}
+        tripleDES = new TripleDES(fromString(key1Field.getText()), fromString(key2Field.getText()), fromString(key3Field.getText()));
+        decrypted = tripleDES.decrypt(fromString(cryptogramArea.toString()));
+        plaintextArea.setText(toString(decrypted));
+        //String result = toString(decrypted);
+        //String res = "";
+
+        // Loop to iterate through String
+//        for (int i = 0; i < result.length(); i += 8) {
+//            int decimal_value
+//                    = binaryToDecimal((result.substring(i, 8+i)));
+//
+//            // Apprend the ASCII character
+//            // equivalent to current value
+//            res += (char)(decimal_value);
+//        }
+//        plaintextArea.setText(res);
+        return 0;
+    }
+
+    static int binaryToDecimal(String n)
+    {
+        String num = n;
+
+        // Stores the decimal value
+        int dec_value = 0;
+
+        // Initializing base value to 1
+        int base = 1;
+
+        int len = num.length();
+        for (int i = len - 1; i >= 0; i--) {
+
+            // If the current bit is 1
+            if (num.charAt(i) == '1')
+                dec_value += base;
+            base = base * 2;
+        }
+
+        // Return answer
+        return dec_value;
     }
 
 }
