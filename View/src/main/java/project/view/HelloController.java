@@ -95,6 +95,23 @@ public class HelloController {
         return fromString(keyString);
     }
 
+    @FXML private void saveKeysToFile() {
+        JFileChooser jfc = new JFileChooser();
+        int returnValue = jfc.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = jfc.getSelectedFile();
+            File file = new File(String.valueOf(selectedFile));
+            try (FileWriter fw = new FileWriter(file)) {
+                fw.write(new String(key1Field.getText().getBytes(StandardCharsets.UTF_8),StandardCharsets.UTF_8));
+                fw.write(new String(key2Field.getText().getBytes(StandardCharsets.UTF_8),StandardCharsets.UTF_8));
+                fw.write(new String(key3Field.getText().getBytes(StandardCharsets.UTF_8),StandardCharsets.UTF_8));
+                fw.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @FXML protected void initialize() {
         key = new Key();
     }
