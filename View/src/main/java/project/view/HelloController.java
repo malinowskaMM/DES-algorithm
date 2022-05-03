@@ -6,20 +6,25 @@ import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import project.model.*;
 
 public class HelloController {
+    TripleDES tripleDES;
+    Key key;
     StringBuilder plaintextStringBuilder;
     StringBuilder cryptogramStringBuilder;
     String plaintextString;
     String cryptogramString;
     byte[] byteArea;
-
-//zestaw V - triple des
-
-    @FXML
-    private TextArea plaintextArea;
-    @FXML
-    private TextArea cryptogramArea;
+    BitSet firstKey;
+    BitSet secondKey;
+    BitSet thirdKey;
+    @FXML private TextArea plaintextArea;
+    @FXML private TextArea cryptogramArea;
+    @FXML private  TextField key1Field;
+    @FXML private  TextField key2Field;
+    @FXML private  TextField key3Field;
 
     private byte[] getByteAreaFromFile(File file) throws IOException {
         FileReader fileReader = new FileReader(file);
@@ -29,7 +34,6 @@ public class HelloController {
             textBuilder.append((char)i);
         }
         byteArea =textBuilder.toString().getBytes(StandardCharsets.UTF_8);
-
         //uważać na błedy z buforem - czy na pewno on jest pusty przy ponownym ładowaniu
         return byteArea;
     }
@@ -66,8 +70,17 @@ public class HelloController {
         }
     }
 
-    @FXML
-    protected void loadTextFromFile() throws IOException {
+    BitSet generateKey(TextField textField) {
+        String keyString = key.getKey();
+        textField.setText(keyString);
+        return fromString(keyString);
+    }
+
+    @FXML protected void initialize() {
+        key = new Key();
+    }
+
+    @FXML protected void loadTextFromFile() throws IOException {
         JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -79,8 +92,7 @@ public class HelloController {
         }
     }
 
-    @FXML
-    protected void loadCryptogramFromFile() throws IOException {
+    @FXML protected void loadCryptogramFromFile() throws IOException {
         JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -95,24 +107,32 @@ public class HelloController {
         }
     }
 
-    @FXML
-    protected void saveTextFromPlaintextWindow(ActionEvent event) throws IOException {
+    @FXML protected void saveTextFromPlaintextWindow(ActionEvent event) throws IOException {
         saveToFile(byteArea, plaintextArea);
     }
 
-    @FXML
-    protected void saveTextFromCryptogramWindow(ActionEvent event) throws IOException {
+    @FXML protected void saveTextFromCryptogramWindow(ActionEvent event) throws IOException {
         saveToFile(byteArea, cryptogramArea);
     }
 
-    @FXML
-    protected void setPlaintextClearButton(ActionEvent event) {
+    @FXML protected void setPlaintextClearButton(ActionEvent event) {
         plaintextArea.clear();
     }
 
-    @FXML
-    protected void setCryptogramClearButton(ActionEvent event) {
+    @FXML protected void setCryptogramClearButton(ActionEvent event) {
         cryptogramArea.clear();
+    }
+
+    @FXML protected void generateFirstKey(ActionEvent event) {
+        firstKey = generateKey(key1Field);
+    }
+
+    @FXML protected void generateSecondKey(ActionEvent event) {
+        secondKey = generateKey(key2Field);
+    }
+
+    @FXML protected void generateThirdKey(ActionEvent event) {
+        thirdKey = generateKey(key3Field);
     }
 
 }

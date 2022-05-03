@@ -12,35 +12,46 @@
    <children>
     <AnchorPane prefHeight="610.0" prefWidth="678.0" style="-fx-background-color: black;">
          <children>
-            <Label layoutX="25.0" layoutY="14.0" prefHeight="26.0" prefWidth="77.0" text="Klucz" textFill="#bcbcbc">
+            <Label layoutX="25.0" prefHeight="26.0" prefWidth="77.0" text="Klucz" textFill="#bcbcbc">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
             <Label layoutX="36.0" layoutY="42.0" />
-            <Label layoutX="36.0" layoutY="50.0" prefHeight="18.0" prefWidth="111.0" text="Wartość klucza" textFill="#bcbcbc" />
-            <TextField fx:id="keyField" layoutX="36.0" layoutY="66.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
-            <Label layoutX="279.0" layoutY="51.0" text="Wygeneruj wartość klucza" textFill="#bcbcbc" />
-            <Button id="keyGenerate" fx:id="keyGenerateButton" layoutX="296.0" layoutY="66.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Wygeneruj klucz" textFill="WHITE" />
-            <Button id="keyLoad" fx:id="keyLoadButton" layoutX="456.0" layoutY="29.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Wczytaj klucz z pliku" textFill="WHITE" />
-            <Button id="keySave" fx:id="keySaveButton" layoutX="456.0" layoutY="66.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Zapisz klucz do pliku" textFill="WHITE" />
-            <Label layoutX="23.0" layoutY="116.0" prefHeight="28.0" prefWidth="248.0" text="Szyfrowanie/deszyfrowanie" textFill="#bcbcbc">
+            <Label layoutX="36.0" layoutY="33.0" prefHeight="18.0" prefWidth="158.0" text="Wartość klucza pierwszego" textFill="#bcbcbc" />
+            <TextField fx:id="key1Field" layoutX="36.0" layoutY="53.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
+            <Button id="keyGenerate" fx:id="key1GenerateButton" layoutX="258.0" layoutY="53.0" mnemonicParsing="false" onAction="#generateFirstKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
+            <Button id="keyLoad" fx:id="keysLoadButton" layoutX="412.0" layoutY="150.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Wczytaj klucze z pliku" textFill="WHITE" />
+            <Button id="keySave" fx:id="keysSaveButton" layoutX="412.0" layoutY="105.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="154.0" style="-fx-background-color: #727272;" text="Zapisz klucze do pliku" textFill="WHITE" />
+            <Label layoutX="37.0" layoutY="202.0" prefHeight="28.0" prefWidth="248.0" text="Szyfrowanie/deszyfrowanie" textFill="#bcbcbc">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <TextArea fx:id="plaintextArea" layoutX="65.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
-            <TextArea fx:id="cryptogramArea" layoutX="394.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
-            <Button id="encrypt" fx:id="encryptButton" layoutX="303.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
-            <Button id="decrypt" fx:id="decryptButton" layoutX="297.0" layoutY="285.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Deszyfruj" textFill="WHITE" />
-            <Label layoutX="64.0" layoutY="167.0" text="Tekst jawny" textFill="#bcbcbc" />
-            <Label layoutX="394.0" layoutY="167.0" text="Szyfrogram" textFill="#bcbcbc" />
-            <Button id="plaintextLoad" fx:id="plaintextLoadButton" layoutX="86.0" layoutY="437.0" mnemonicParsing="false" onAction="#loadTextFromFile" style="-fx-background-color: #727272;" text="Wczytaj tekst jawny z pliku" textFill="WHITE" />
-            <Button id="cryptogramLoad" fx:id="cryptogramLoadButton" layoutX="415.0" layoutY="437.0" mnemonicParsing="false" onAction="#loadCryptogramFromFile" style="-fx-background-color: #727272;" text="Wczytaj szyfrogram z pliku" textFill="WHITE" />
-            <Button id="plaintextSave" fx:id="plaintextSaveButton" layoutX="86.0" layoutY="474.0" mnemonicParsing="false" onAction="#saveTextFromPlaintextWindow" style="-fx-background-color: #727272;" text="Zapisz tekst jawny do pliku" textFill="WHITE" />
-            <Button id="cryptogramSave" fx:id="cryptogramSaveButton" layoutX="414.0" layoutY="474.0" mnemonicParsing="false" onAction="#saveTextFromCryptogramWindow" style="-fx-background-color: #727272;" text="Zapisz szyfrogram do pliku" textFill="WHITE" />
-            <Button id="decrypt" fx:id="plaintextClearButton" layoutX="204.0" layoutY="391.0" mnemonicParsing="false" onAction="#setPlaintextClearButton" style="-fx-background-color: #727272;" text="Wyczyść" textFill="WHITE" />
-            <Button id="decrypt" fx:id="cryptogramClearButton" layoutX="533.0" layoutY="391.0" mnemonicParsing="false" onAction="#setCryptogramClearButton" style="-fx-background-color: #727272;" text="Wyczyść" textFill="WHITE" />
+            <TextArea fx:id="plaintextArea" layoutX="79.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
+            <TextArea fx:id="cryptogramArea" layoutX="408.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
+            <Button id="encrypt" fx:id="encryptButton" layoutX="317.0" layoutY="284.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
+            <Button id="decrypt" fx:id="decryptButton" layoutX="311.0" layoutY="348.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Deszyfruj" textFill="WHITE" />
+            <Label layoutX="78.0" layoutY="230.0" text="Tekst jawny" textFill="#bcbcbc" />
+            <Label layoutX="408.0" layoutY="230.0" text="Szyfrogram" textFill="#bcbcbc" />
+            <Button id="plaintextLoad" fx:id="plaintextLoadButton" layoutX="100.0" layoutY="500.0" mnemonicParsing="false" onAction="#loadTextFromFile" style="-fx-background-color: #727272;" text="Wczytaj tekst jawny z pliku" textFill="WHITE" />
+            <Button id="cryptogramLoad" fx:id="cryptogramLoadButton" layoutX="420.0" layoutY="500.0" mnemonicParsing="false" onAction="#loadCryptogramFromFile" style="-fx-background-color: #727272;" text="Wczytaj szyfrogram z pliku" textFill="WHITE" />
+            <Button id="plaintextSave" fx:id="plaintextSaveButton" layoutX="99.0" layoutY="537.0" mnemonicParsing="false" onAction="#saveTextFromPlaintextWindow" prefHeight="26.0" prefWidth="162.0" style="-fx-background-color: #727272;" text="Zapisz tekst jawny do pliku" textFill="WHITE" />
+            <Button id="cryptogramSave" fx:id="cryptogramSaveButton" layoutX="419.0" layoutY="537.0" mnemonicParsing="false" onAction="#saveTextFromCryptogramWindow" style="-fx-background-color: #727272;" text="Zapisz szyfrogram do pliku" textFill="WHITE" />
+            <Button id="decrypt" fx:id="plaintextClearButton" layoutX="218.0" layoutY="454.0" mnemonicParsing="false" onAction="#setPlaintextClearButton" style="-fx-background-color: #727272;" text="Wyczyść" textFill="WHITE" />
+            <Button id="decrypt" fx:id="cryptogramClearButton" layoutX="547.0" layoutY="454.0" mnemonicParsing="false" onAction="#setCryptogramClearButton" style="-fx-background-color: #727272;" text="Wyczyść" textFill="WHITE" />
+            <Label layoutX="36.0" layoutY="86.0" prefHeight="18.0" prefWidth="158.0" text="Wartość klucza drugiego" textFill="#bcbcbc" />
+            <TextField fx:id="key2Field" layoutX="36.0" layoutY="106.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
+            <Label layoutX="36.0" layoutY="140.0" prefHeight="18.0" prefWidth="158.0" text="Wartość klucza trzeciego" textFill="#bcbcbc" />
+            <TextField fx:id="key3Field" layoutX="36.0" layoutY="158.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
+            <Button id="keyGenerate" fx:id="key2GenerateButton" layoutX="258.0" layoutY="106.0" mnemonicParsing="false" onAction="#generateSecondKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
+            <Button id="keyGenerate" fx:id="key3GenerateButton" layoutX="258.0" layoutY="158.0" mnemonicParsing="false" onAction="#generateThirdKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
+            <Button id="keyGenerate" fx:id="keyAllGenerateButton" layoutX="408.0" layoutY="61.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Wygeneruj wszystkie klucze" textFill="WHITE" />
+            <Label layoutX="520.0" layoutY="-15.0" text="3DES" textFill="#ffffff9d">
+               <font>
+                  <Font size="51.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>
