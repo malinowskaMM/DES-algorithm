@@ -1,6 +1,7 @@
 package project.view;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.BitSet;
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,6 +32,24 @@ public class HelloController {
 
         //uważać na błedy z buforem - czy na pewno on jest pusty przy ponownym ładowaniu
         return byteArea;
+    }
+
+    private BitSet fromString(String in) {
+        if (in.isEmpty()) {
+            return new BitSet();
+        }
+        StringBuilder inBuilder = new StringBuilder(in);
+        String reversedIn = inBuilder.reverse().toString();
+
+        BitSet bits = new BitSet(in.length());
+
+        for (int i = 0; i < in.length(); i++) {
+            if (reversedIn.charAt(i) == '1') {
+                bits.set(i);
+            }
+        }
+
+        return bits;
     }
 
     private void saveToFile(byte[] byteArea, TextArea textArea) throws IOException {
