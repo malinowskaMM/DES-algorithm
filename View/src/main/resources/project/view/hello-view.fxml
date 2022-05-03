@@ -30,7 +30,7 @@
             </Label>
             <TextArea fx:id="plaintextArea" layoutX="79.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
             <TextArea fx:id="cryptogramArea" layoutX="408.0" layoutY="248.0" prefHeight="200.0" prefWidth="200.0" style="-fx-control-inner-background: #343333; -fx-text-fill: #ffffff;" />
-            <Button id="encrypt" fx:id="encryptButton" layoutX="317.0" layoutY="284.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
+            <Button id="encrypt" fx:id="encryptButton" layoutX="317.0" layoutY="284.0" mnemonicParsing="false" onAction="#encryptMessage" style="-fx-background-color: #727272;" text="Szyfruj" textFill="WHITE" />
             <Button id="decrypt" fx:id="decryptButton" layoutX="311.0" layoutY="348.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Deszyfruj" textFill="WHITE" />
             <Label layoutX="78.0" layoutY="230.0" text="Tekst jawny" textFill="#bcbcbc" />
             <Label layoutX="408.0" layoutY="230.0" text="Szyfrogram" textFill="#bcbcbc" />
@@ -46,7 +46,7 @@
             <TextField fx:id="key3Field" layoutX="36.0" layoutY="158.0" prefHeight="26.0" prefWidth="198.0" style="-fx-background-color: #343333; -fx-text-fill: white;" />
             <Button id="keyGenerate" fx:id="key2GenerateButton" layoutX="258.0" layoutY="106.0" mnemonicParsing="false" onAction="#generateSecondKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
             <Button id="keyGenerate" fx:id="key3GenerateButton" layoutX="258.0" layoutY="158.0" mnemonicParsing="false" onAction="#generateThirdKey" style="-fx-background-color: #727272;" text="Wygeneruj " textFill="WHITE" />
-            <Button id="keyGenerate" fx:id="keyAllGenerateButton" layoutX="408.0" layoutY="61.0" mnemonicParsing="false" style="-fx-background-color: #727272;" text="Wygeneruj wszystkie klucze" textFill="WHITE" />
+            <Button id="keyGenerate" fx:id="keyAllGenerateButton" layoutX="408.0" layoutY="61.0" mnemonicParsing="false" onAction="#generateAllKeys" style="-fx-background-color: #727272;" text="Wygeneruj wszystkie klucze" textFill="WHITE" />
             <Label layoutX="520.0" layoutY="-15.0" text="3DES" textFill="#ffffff9d">
                <font>
                   <Font size="51.0" />

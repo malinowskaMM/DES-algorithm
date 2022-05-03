@@ -5,8 +5,8 @@ import java.util.BitSet;
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.AccessibleAction;
+import javafx.scene.control.*;
 import project.model.*;
 
 public class HelloController {
@@ -20,6 +20,7 @@ public class HelloController {
     BitSet firstKey;
     BitSet secondKey;
     BitSet thirdKey;
+    BitSet encrypted;
     @FXML private TextArea plaintextArea;
     @FXML private TextArea cryptogramArea;
     @FXML private  TextField key1Field;
@@ -54,6 +55,24 @@ public class HelloController {
         }
 
         return bits;
+    }
+
+    public static String toString(BitSet bits) {
+        if (bits.isEmpty()) {
+            return "0";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = bits.length() - 1; i >= 0; i--) {
+            if (bits.get(i)) {
+                sb.append("1");
+            } else {
+                sb.append("0");
+            }
+        }
+
+        return sb.toString();
     }
 
     private void saveToFile(byte[] byteArea, TextArea textArea) throws IOException {
@@ -133,6 +152,40 @@ public class HelloController {
 
     @FXML protected void generateThirdKey(ActionEvent event) {
         thirdKey = generateKey(key3Field);
+    }
+
+    @FXML protected void generateAllKeys(ActionEvent event) {
+        firstKey = generateKey(key1Field);
+        secondKey = generateKey(key2Field);
+        thirdKey = generateKey(key3Field);
+    }
+
+    private void openWarningDialog(String text) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Komunikat");
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        dialog.setContentText(text);
+        dialog.getDialogPane().getButtonTypes().add(type);
+        dialog.showAndWait();
+    }
+
+    @FXML protected int encryptMessage(ActionEvent event) {
+        if(key1Field.getText().isEmpty()) {
+            openWarningDialog("Brak pierwszego klucza");
+            return -1; }
+        if(key2Field.getText().isEmpty()) {
+            openWarningDialog("Brak drugiego klucza");
+            return -1;}
+        if(key3Field.getText().isEmpty()) {
+            openWarningDialog("Brak trzeciego klucza");
+            return -1;}
+        if(plaintextString.toString().isEmpty()) {
+            openWarningDialog("Pusta wiadomosc do zakodowania");
+            return -1;}
+        tripleDES = new TripleDES(fromString(key1Field.getText()), fromString(key2Field.getText()), fromString(key3Field.getText()));
+        encrypted = tripleDES.encrypt(fromString(plaintextArea.toString()));
+        cryptogramArea.setText(toString(encrypted));
+        return 0;
     }
 
 }
