@@ -23,7 +23,7 @@ public class TripleDES {
         DES d2 = new DES(bo.reverseKeysOrder(subKeysTwo));
         BitSet m2 = d2.cypherOneBlock(m1);
         DES d3 = new DES(subKeysThree);
-        BitSet m3 = d1.cypherOneBlock(m2);
+        BitSet m3 = d3.cypherOneBlock(m2);
 
         return m3;
     }
@@ -35,7 +35,7 @@ public class TripleDES {
         DES d2 = new DES(subKeysTwo);
         BitSet m2 = d2.cypherOneBlock(m1);
         DES d3 = new DES(bo.reverseKeysOrder(subKeysThree));
-        BitSet m3 = d1.cypherOneBlock(m2);
+        BitSet m3 = d3.cypherOneBlock(m2);
 
         return m3;
     }
