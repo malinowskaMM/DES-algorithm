@@ -214,11 +214,11 @@ public class HelloController {
         if(key3Field.getText().isEmpty()) {
             openWarningDialog("Brak trzeciego klucza");
             return -1;}
-        if(plaintextString.toString().isEmpty()) {
+        if(plaintextArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
         tripleDES = new TripleDES(fromString(key1Field.getText()), fromString(key2Field.getText()), fromString(key3Field.getText()));
-        encrypted = tripleDES.encrypt(fromString(plaintextArea.toString()));
+        encrypted = tripleDES.encrypt(fromString(plaintextArea.getText()));
         cryptogramArea.setText(toString(encrypted));
         return 0;
     }
@@ -233,11 +233,11 @@ public class HelloController {
         if(key3Field.getText().isEmpty()) {
             openWarningDialog("Brak trzeciego klucza");
             return -1;}
-        if(plaintextString.toString().isEmpty()) {
+        if(cryptogramArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
         tripleDES = new TripleDES(fromString(key1Field.getText()), fromString(key2Field.getText()), fromString(key3Field.getText()));
-        decrypted = tripleDES.decrypt(fromString(cryptogramArea.toString()));
+        decrypted = tripleDES.decrypt(fromString(cryptogramArea.getText()));
         plaintextArea.setText(toString(decrypted));
         //String result = toString(decrypted);
         //String res = "";
