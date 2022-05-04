@@ -156,26 +156,6 @@ class DESTest {
 
     }
 
-    // for debugging
-    @Test void checkTableForDuplicates() {
-        Keys k = new Keys();
-        int[] table = k.PC2KeyPermutationTable;
-        Set a = new TreeSet();
-        int tableSize = table.length;
-        for(int element: table) {
-            a.add(element);
-        }
-        int setSize = a.size();
-
-//        System.out.printf("table size: %d, set size: %d\n", tableSize, setSize);
-//        Arrays.sort(table);
-//        a.forEach(System.out::println);
-//        for(var x: table) {
-//            System.out.println(x);
-//        }
-//        assertEquals(tableSize, setSize);
-    }
-
     @Test
     public void getFromSBoxTest() {
         assertEquals(des.getFromSBox(0, 0, 0), 14);
