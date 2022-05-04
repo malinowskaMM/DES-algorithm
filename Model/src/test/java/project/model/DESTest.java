@@ -92,9 +92,20 @@ class DESTest {
             }
         }
 
+        BitSet message1 = new BitSet(64);
+        for (int i = 0; i < 64; i++) {
+            if ((i % 2 == 0) && (i % 5 != 0)) {
+                message1.set(i);
+            }
+        }
+
+
         List<BitSet> subKeys = k.generate16keys(key);
         DES desEncrypt = new DES(subKeys);
         BitSet encrypted = desEncrypt.cypherOneBlock(message);
+        BitSet encrypted1 = desEncrypt.cypherOneBlock(message1);
+
+        assertNotEquals(encrypted, encrypted1);
 
         assertEquals(encrypted.size(), message.size());
         assertNotEquals(encrypted, message);
@@ -105,7 +116,9 @@ class DESTest {
         BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
 
 
-        // print key
+
+
+//         print key
         System.out.print("\nOriginal message: ");
         for (int i = 0; i < 64; i++) {
             if (message.get(i)) {

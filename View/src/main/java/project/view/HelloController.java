@@ -255,6 +255,24 @@ public class HelloController {
         return 0;
     }
 
+
+    static String bitSetToString(String bitSet) {
+        String res = "";
+
+        for (int i = 0; i < bitSet.length(); i += 8) {
+            int decimal_value
+                    = binaryToDecimal((bitSet.substring(i, 8+i)));
+
+            // Apprend the ASCII character
+            // equivalent to current value
+            res += (char)(decimal_value);
+        }
+
+        return res;
+    }
+
+
+
     static int binaryToDecimal(String n)
     {
         String num = n;
