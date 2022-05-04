@@ -43,6 +43,24 @@ class BitOperationsTest {
     }
 
     @Test
+    public void leftShiftTest_III() {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(1);
+        bs.set(34);
+        bs.set(63);
+        System.out.println(bo.bitSetToString(bs));
+        BitSet result = bo.leftShift(bs, 64, 2);
+        System.out.println(bo.bitSetToString(result));
+
+        assertEquals(result.cardinality(), 4);
+        assertTrue(result.get(63));
+        assertTrue(result.get(62));
+        assertTrue(result.get(32));
+        assertTrue(result.get(61));
+    }
+
+    @Test
     public void concatenationTest() {
         BitSet bitSet1 = new BitSet(6);
         BitSet bitSet2 = new BitSet(6);
