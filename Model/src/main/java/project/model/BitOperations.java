@@ -118,4 +118,31 @@ public class BitOperations {
 
         return result;
     }
+
+    public BitSet fromString(String in) {
+        if (in.isEmpty()) {
+            return new BitSet();
+        }
+        String[] strings = new String[in.length()];
+        for (int i = 0; i < in.length(); i++) {
+            strings[i] = Integer.toBinaryString(in.charAt(i));
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < strings.length; i++) {
+            stringBuilder.append(strings[i]);
+        }
+
+        stringBuilder = stringBuilder.reverse();
+
+        BitSet bits = new BitSet();
+
+        for (int i = 0; i < stringBuilder.toString().length(); i++) {
+                if(stringBuilder.toString().charAt(i) == '1') {
+                    bits.set(i);
+                }
+        }
+        return bits;
+        //return reverseBitOrder(bits, bits.size());
+    }
+
 }
