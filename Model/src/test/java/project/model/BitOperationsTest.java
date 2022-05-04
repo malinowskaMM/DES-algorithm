@@ -35,6 +35,29 @@ class BitOperationsTest {
     }
 
     @Test
+    public void concatenationTest() {
+        BitSet bitSet1 = new BitSet(6);
+        BitSet bitSet2 = new BitSet(6);
+
+        bitSet1.set(0);
+        bitSet1.set(3);
+        bitSet1.set(5);
+
+        bitSet2.set(0);
+        bitSet2.set(5);
+
+        BitSet bitSet3 = new BitSet(12);
+        bitSet3.set(0);
+        bitSet3.set(3);
+        bitSet3.set(5);
+        bitSet3.set(6);
+        bitSet3.set(11);
+
+        assertEquals(bo.concatenation(bitSet1, bitSet2, 6), bitSet3);
+    }
+
+
+    @Test
     public void reverseKeysOrderTest() {
         Keys k = new Keys();
         BitSet key = new BitSet(64);
@@ -85,6 +108,28 @@ class BitOperationsTest {
         assertEquals(split[1].cardinality(), 2);
     }
 
+
+    @Test
+    public void splitTestII() {
+        BitSet input = new BitSet(6);
+        input.set(0);
+        input.set(2);
+        input.set(5);
+
+        BitSet result1 = new BitSet(3);
+        BitSet result2 = new BitSet(3);
+        result1.set(0);
+        result1.set(2);
+        result2.set(2);
+
+        assertEquals(bo.split(input, 6)[0], result1);
+        assertEquals(bo.split(input, 6)[1], result2);
+    }
+
+
+
+
+
     @Test
     public void permutationTest() {
         BitSet input = new BitSet(64);
@@ -111,6 +156,27 @@ class BitOperationsTest {
         assertTrue(output.length() <= 10);
         assertEquals(output.cardinality(), 5);
     }
+
+    @Test
+    public void permutationTestII() {
+        BitSet input = new BitSet(10);
+        input.set(0); //ok
+        input.set(3); //
+        input.set(5); //ok
+        input.set(7);
+        input.set(9); //ok
+
+        int[] table = {10, 6, 9, 5, 3, 2, 8, 7, 4, 1};
+        BitSet result = new BitSet(10);
+        result.set(0);
+        result.set(1);
+        result.set(6);
+        result.set(8);
+        result.set(9);
+
+        assertEquals(bo.permutation(input, table), result);
+    }
+
 
     @Test
     public void bitSetToIntTest() {
