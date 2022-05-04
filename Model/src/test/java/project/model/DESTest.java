@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -89,6 +87,15 @@ class DESTest {
         String keyStr = bo.bitSetToString(key);
         System.out.println(keyStr);
 
+        // key reverted
+        BitSet keyR = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            keyR.set(6 + i * 8);
+        }
+        System.out.println("KEY reverted:");
+        String keyStrR = bo.bitSetToString(keyR);
+        System.out.println(keyStrR);
+
         // message
         BitSet message = new BitSet();
         for(int i = 0; i < 8; i++) {
@@ -98,8 +105,19 @@ class DESTest {
         String msgStr = bo.bitSetToString(message);
         System.out.println(msgStr);
 
+
+        // message reverted
+        BitSet messageR = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            messageR.set(6 + i * 8);
+        }
+        System.out.println("MSG reverted:");
+        String msgStrR = bo.bitSetToString(messageR);
+        System.out.println(msgStrR);
+
         Keys k = new Keys();
         List<BitSet> subKeys = k.generate16keys(key);
+        List<BitSet> subKeysR = k.generate16keys(key);
 
         // encryption
         DES d = new DES(subKeys);
@@ -109,9 +127,21 @@ class DESTest {
         System.out.println(encStr);
         String hexString = new BigInteger(encStr, 2).toString(16);
         System.out.println(hexString);
-        assertEquals(hexString, "6d55ddbc8dea95ff");
 
+        // encryption reverted
+        DES dR = new DES(subKeysR);
+        BitSet encryptedR = d.cypherOneBlock(messageR);
+        String encStrR = bo.bitSetToString(encryptedR);
+        System.out.println("ENC reverted:");
+        System.out.println(encStrR);
+        String hexStringR = new BigInteger(encStrR, 2).toString(16);
+        System.out.println(hexStringR);
 
+        String expectedOutput = "6d55ddbc8dea95ff";
+        boolean isEncCorrect = hexString.equals(expectedOutput);
+        boolean isEncRevertedCorrect = hexStringR.equals(expectedOutput);
+        boolean isEitherCorrect = isEncCorrect || isEncRevertedCorrect;
+        assertEquals(hexString, isEitherCorrect);
     }
 
     @Test
