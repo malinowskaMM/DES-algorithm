@@ -145,4 +145,22 @@ class BitOperationsTest {
         assertEquals(bs.cardinality(), 1);
         assertTrue(bs.get(3));
     }
+
+    @Test
+    public void stringToBitSetTest() {
+        BitSet bs = new BitSet();
+        String testString = "ok"; //1101111 1101011
+        bs = bo.fromString(testString);
+
+        String result="11011111101011";
+        StringBuilder stringBuilder = new StringBuilder(result);
+        stringBuilder = stringBuilder.reverse();
+        BitSet bsResult = new BitSet();
+        for(int i = 0; i < result.length(); i++) {
+            if(stringBuilder.toString().charAt(i) == '1') {
+                bsResult.set(i);
+            }
+        }
+        assertEquals(bs, bsResult);
+    }
 }
