@@ -6,7 +6,6 @@ import java.util.BitSet;
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.AccessibleAction;
 import javafx.scene.control.*;
 import project.model.*;
 
@@ -42,25 +41,6 @@ public class HelloController {
         return byteArea;
     }
 
-
-    public static String toString(BitSet bits) {
-        if (bits.isEmpty()) {
-            return "0";
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = bits.length() - 1; i >= 0; i--) {
-            if (bits.get(i)) {
-                sb.append("1");
-            } else {
-                sb.append("0");
-            }
-        }
-
-        return sb.toString();
-    }
-
     private void saveToFile(byte[] byteArea, TextArea textArea) throws IOException {
         JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showSaveDialog(null);
@@ -78,7 +58,7 @@ public class HelloController {
     BitSet generateKey(TextField textField) {
         String keyString = key.getKey();
         textField.setText(keyString);
-        return bitOperations.fromString(keyString);
+        return bitOperations.bitSetFromStringASCII(keyString);
     }
 
     @FXML private void saveKeysToFile() {
@@ -104,11 +84,11 @@ public class HelloController {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
             String fromFile = Files.readString(selectedFile.toPath());
-            firstKey = bitOperations.fromString(fromFile.substring(0, 8));
+            firstKey = bitOperations.bitSetFromStringASCII(fromFile.substring(0, 8));
             key1Field.setText(fromFile.substring(0, 8));
-            secondKey = bitOperations.fromString(fromFile.substring(8, 16));
+            secondKey = bitOperations.bitSetFromStringASCII(fromFile.substring(8, 16));
             key2Field.setText(fromFile.substring(8, 16));
-            thirdKey = bitOperations.fromString(fromFile.substring(16, 24));
+            thirdKey = bitOperations.bitSetFromStringASCII(fromFile.substring(16, 24));
             key3Field.setText(fromFile.substring(16, 24));
             }
         }
@@ -202,9 +182,9 @@ public class HelloController {
         if(plaintextArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
-        tripleDES = new TripleDES(bitOperations.fromString(key1Field.getText()), bitOperations.fromString(key2Field.getText()), bitOperations.fromString(key3Field.getText()));
-        encrypted = tripleDES.encrypt(bitOperations.fromString(plaintextArea.getText()));
-        cryptogramArea.setText(toString(encrypted));
+        tripleDES = new TripleDES(bitOperations.bitSetFromStringASCII(key1Field.getText()), bitOperations.bitSetFromStringASCII(key2Field.getText()), bitOperations.bitSetFromStringASCII(key3Field.getText()));
+        encrypted = tripleDES.encrypt(bitOperations.bitSetFromStringASCII(plaintextArea.getText()));
+        cryptogramArea.setText(bitOperations.bitSetToStringASCII(encrypted));
         return 0;
     }
 
@@ -221,64 +201,10 @@ public class HelloController {
         if(cryptogramArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
-        tripleDES = new TripleDES(bitOperations.fromString(key1Field.getText()), bitOperations.fromString(key2Field.getText()), bitOperations.fromString(key3Field.getText()));
-        decrypted = tripleDES.decrypt(bitOperations.fromString(cryptogramArea.getText()));
-        plaintextArea.setText(toString(decrypted));
-        //String result = toString(decrypted);
-        //String res = "";
-
-        // Loop to iterate through String
-//        for (int i = 0; i < result.length(); i += 8) {
-//            int decimal_value
-//                    = binaryToDecimal((result.substring(i, 8+i)));
-//
-//            // Apprend the ASCII character
-//            // equivalent to current value
-//            res += (char)(decimal_value);
-//        }
-//        plaintextArea.setText(res);
+        tripleDES = new TripleDES(bitOperations.bitSetFromStringASCII(key1Field.getText()), bitOperations.bitSetFromStringASCII(key2Field.getText()), bitOperations.bitSetFromStringASCII(key3Field.getText()));
+        decrypted = tripleDES.decrypt(bitOperations.bitSetFromStringASCII(cryptogramArea.getText()));
+        plaintextArea.setText(bitOperations.bitSetToStringASCII(decrypted));
         return 0;
-    }
-
-
-    static String bitSetToString(String bitSet) {
-        String res = "";
-
-        for (int i = 0; i < bitSet.length(); i += 8) {
-            int decimal_value
-                    = binaryToDecimal((bitSet.substring(i, 8+i)));
-
-            // Apprend the ASCII character
-            // equivalent to current value
-            res += (char)(decimal_value);
-        }
-
-        return res;
-    }
-
-
-
-    static int binaryToDecimal(String n)
-    {
-        String num = n;
-
-        // Stores the decimal value
-        int dec_value = 0;
-
-        // Initializing base value to 1
-        int base = 1;
-
-        int len = num.length();
-        for (int i = len - 1; i >= 0; i--) {
-
-            // If the current bit is 1
-            if (num.charAt(i) == '1')
-                dec_value += base;
-            base = base * 2;
-        }
-
-        // Return answer
-        return dec_value;
     }
 
 }

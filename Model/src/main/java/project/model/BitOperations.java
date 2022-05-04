@@ -119,7 +119,7 @@ public class BitOperations {
         return result;
     }
 
-    public BitSet fromString(String in) {
+    public BitSet bitSetFromStringASCII(String in) {
         if (in.isEmpty()) {
             return new BitSet();
         }
@@ -142,7 +142,42 @@ public class BitOperations {
                 }
         }
         return bits;
-        //return reverseBitOrder(bits, bits.size());
+    }
+
+
+    public static String bitSetToStringASCII(BitSet bits) {
+        if (bits.isEmpty()) {
+            return "0";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = bits.length() - 1; i >= 0; i--) {
+            if (bits.get(i)) {
+                sb.append("1");
+            } else {
+                sb.append("0");
+            }
+        }
+
+        StringBuilder resultASCII = new StringBuilder();
+        int div = sb.toString().length()/7;
+        String[] strings = new String[div];
+        int[] intsFromStrings =  new int[div];
+
+        for(int i = 0; i < div; i++) {
+            String string = "";
+            StringBuilder stringBuilder = new StringBuilder(string);
+            int end = (i+1) * 7;
+            for(int j = i * 7; j < end; j++) {
+                stringBuilder.append(sb.toString().charAt(j));
+            }
+            strings[i] = stringBuilder.toString();
+            intsFromStrings[i] = Integer.parseInt(strings[i], 2);
+            resultASCII.append((char)intsFromStrings[i]);
+        }
+
+        return resultASCII.toString();
     }
 
 }
