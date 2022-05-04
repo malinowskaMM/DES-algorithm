@@ -2,6 +2,7 @@ package project.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
@@ -76,6 +77,44 @@ class DESTest {
     }
 
     @Test
+    public void encryption() {
+        BitOperations bo = new BitOperations();
+
+        // key
+        BitSet key = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            key.set(1 + i * 8);
+        }
+        System.out.println("KEY:");
+        String keyStr = bo.bitSetToString(key);
+        System.out.println(keyStr);
+
+        // message
+        BitSet message = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            message.set(1 + i * 8);
+        }
+        System.out.println("MSG:");
+        String msgStr = bo.bitSetToString(message);
+        System.out.println(msgStr);
+
+        Keys k = new Keys();
+        List<BitSet> subKeys = k.generate16keys(key);
+
+        // encryption
+        DES d = new DES(subKeys);
+        BitSet encrypted = d.cypherOneBlock(message);
+        String encStr = bo.bitSetToString(encrypted);
+        System.out.println("ENC:");
+        System.out.println(encStr);
+        String hexString = new BigInteger(encStr, 2).toString(16);
+        System.out.println(hexString);
+        assertEquals(hexString, "6d55ddbc8dea95ff");
+
+
+    }
+
+    @Test
     public void encryptAndDecryptTest() {
         Keys k = new Keys();
         BitSet key = new BitSet(64);
@@ -115,39 +154,6 @@ class DESTest {
         DES desDecrypt = new DES(subKeyReversed);
         BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
 
-
-
-
-//         print key
-        System.out.print("\nOriginal message: ");
-        for (int i = 0; i < 64; i++) {
-            if (message.get(i)) {
-                System.out.print("1");
-            } else {
-                System.out.print("0");
-            }
-        }
-
-        // print key
-        System.out.print("\nDecrypted message:");
-        for (int i = 0; i < 64; i++) {
-            if (decrypted.get(i)) {
-                System.out.print("1");
-            } else {
-                System.out.print("0");
-            }
-        }
-
-        // print key
-        System.out.print("\nOriginal key:     ");
-        for (int i = 0; i < 64; i++) {
-            if (key.get(i)) {
-                System.out.print("1");
-            } else {
-                System.out.print("0");
-            }
-        }
-        assertEquals(decrypted, message);
     }
 
     // for debugging
