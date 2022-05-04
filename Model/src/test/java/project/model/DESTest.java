@@ -153,6 +153,7 @@ class DESTest {
         List<BitSet> subKeyReversed = bo.reverseKeysOrder(subKeys);
         DES desDecrypt = new DES(subKeyReversed);
         BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
+        assertNotEquals(decrypted, message);
 
     }
 

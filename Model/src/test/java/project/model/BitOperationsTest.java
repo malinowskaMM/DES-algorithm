@@ -18,20 +18,28 @@ class BitOperationsTest {
 
     @Test
     public void leftShiftTest() {
-        BitSet subKey = new BitSet(6);
+        BitSet subKey = new BitSet(64);
         subKey.set(0, 2);
         subKey.set(3);
-        assertTrue(subKey.length() <= 6);
-        assertEquals(subKey.cardinality(), 3);
+        System.out.println(bo.bitSetToString(subKey));
+        BitSet result = bo.leftShift(subKey, 64, 1);
+        System.out.println(bo.bitSetToString(result));
 
-        BitSet result = bo.leftShift(subKey, 6, 1);
-
-        assertTrue(result.length() <= 6);
         assertEquals(result.cardinality(), 3);
-
-        assertTrue(result.get(1));
+        assertTrue(result.get(0));
+        assertTrue(result.get(63));
         assertTrue(result.get(2));
-        assertTrue(result.get(4));
+    }
+
+    @Test
+    public void leftShiftTest_II() {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(63);
+        bs.set(3);
+        System.out.println(bo.bitSetToString(bs));
+        BitSet result = bo.leftShift(bs, 64, 1);
+        System.out.println(bo.bitSetToString(result));
     }
 
     @Test

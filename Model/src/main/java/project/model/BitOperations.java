@@ -61,26 +61,26 @@ public class BitOperations {
         }
 
         if (shift == 1) {
-            if (key.get(size - 1)) {
-                result.set(0);
+            if (key.get(0)) {
+                result.set(size - 1);
             }
 
-            for (int i = 0; i < size - 1; i++) {
+            for (int i = 1; i < size ; i++) {
                 if (key.get(i)) {
-                    result.set(i + 1);
+                    result.set(i - 1);
                 }
             }
         } else if (shift == 2) {
-            if (key.get(size - 2)) {
-                result.set(0);
+            if (key.get(0)) {
+                result.set(size - 2);
             }
-            if (key.get(size - 1)) {
-                result.set(1);
+            if (key.get(1)) {
+                result.set(size - 1);
             }
 
-            for (int i = 0; i < size - 2; i++) {
+            for (int i = 2; i < size; i++) {
                 if (key.get(i)) {
-                    result.set(i + 2);
+                    result.set(i - 2);
                 }
             }
         }
