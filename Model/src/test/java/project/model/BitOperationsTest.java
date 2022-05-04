@@ -150,7 +150,6 @@ class BitOperationsTest {
     public void stringToBitSetTest() {
         BitSet bs = new BitSet();
         String testString = "ok"; //1101111 1101011
-                                  //1101111 1101011
         bs = bo.bitSetFromStringASCII(testString);
 
         String result="11011111101011";
@@ -162,7 +161,7 @@ class BitOperationsTest {
                 bsResult.set(i);
             }
         }
-        System.out.print(BitOperations.bitSetToStringASCII(bsResult));
+        assertEquals(BitOperations.bitSetToStringASCII(bsResult), "ok");
         assertEquals(bs, bsResult);
     }
 }
