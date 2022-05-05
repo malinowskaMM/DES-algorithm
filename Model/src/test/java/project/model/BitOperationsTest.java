@@ -101,6 +101,15 @@ class BitOperationsTest {
     }
 
     @Test
+    public void reveBitOrderTest() {
+        BitSet bs = new BitSet();
+        BitSet rev = BitOperations.reverseBitOrder(bs, 4);
+
+        assertEquals(rev.size(), 64);
+        assertTrue(rev.isEmpty());
+    }
+
+    @Test
     public void bitSetToStringTest() {
         BitSet bs = new BitSet(64);
         assertEquals(bo.bitSetToString(bs),
@@ -225,11 +234,11 @@ class BitOperationsTest {
         int v = BitOperations.bitSetToInt(bs, 5);
         assertEquals(v, 17);
 
-        bs.set(1);
-        v = BitOperations.bitSetToInt(bs, 5);
-        assertEquals(v, 25);
-
         bs.clear();
+        bs.set(0);
+        v = BitOperations.bitSetToInt(bs, 8);
+        assertEquals(v, 128);
+
     }
 
     @Test
@@ -253,8 +262,8 @@ class BitOperationsTest {
 
     @Test
     public void bitSetToStringASCIITest() {
-        BitSet bs = new BitSet(); // string "DADADADA"
-        for (int i = 0; i < 8; i++) {
+        BitSet bs = new BitSet();
+        for (int i = 0; i < 16; i++) {
                 bs.set(1 + i * 8);
             if(i % 2 == 0) {
                 bs.set(5 + i * 8);
@@ -263,8 +272,7 @@ class BitOperationsTest {
             }
         }
 
-        System.out.println(BitOperations.bitSetToStringASCII(bs));
-        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADA");
+        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADADADADADA");
     }
 
     @Test

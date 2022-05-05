@@ -89,13 +89,23 @@ public class BitOperations {
     }
 
     public static int bitSetToInt(BitSet bs, int len) {
+        boolean isEmpty = true;
+        for (int i = 0; i < len; i++) {
+            if(bs.get(i)) {
+                isEmpty = false;
+                break;
+            }
+        }
+        if(isEmpty)
+            return 0;
+
         BitSet rev = reverseBitOrder(bs, len);
         long[] l = rev.toLongArray();
         return (int)l[0];
     }
 
     public String bitSetToString(BitSet bs) {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < bs.size(); i++) {
             if(bs.get(i)) {
                 result.append("1");
