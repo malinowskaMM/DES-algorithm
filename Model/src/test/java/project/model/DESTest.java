@@ -97,6 +97,8 @@ class DESTest {
         System.out.println("MSG:");
         String msgStr = bo.bitSetToString(message);
         System.out.println(msgStr);
+        String hexMsg = new BigInteger(msgStr, 2).toString(16);
+        System.out.println(hexMsg);
 
         Keys k = new Keys();
         List<BitSet> subKeys = k.generate16keys(key);
@@ -153,7 +155,7 @@ class DESTest {
         List<BitSet> subKeyReversed = bo.reverseKeysOrder(subKeys);
         DES desDecrypt = new DES(subKeyReversed);
         BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
-        assertNotEquals(decrypted, message);
+        assertEquals(decrypted, message);
 
     }
 

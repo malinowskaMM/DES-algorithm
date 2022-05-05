@@ -157,6 +157,26 @@ class BitOperationsTest {
 
 
     @Test
+    public void permutationTest_II() {
+        BitSet bs = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            bs.set(1 + i * 8);
+        }
+        Keys k = new Keys();
+        BitSet permuted = bo.permutation(bs, k.PC1KeyPermutationTable);
+
+        assertEquals(permuted.cardinality(), 8);
+        assertTrue(permuted.get(8));
+        assertTrue(permuted.get(9));
+        assertTrue(permuted.get(10));
+        assertTrue(permuted.get(11));
+        assertTrue(permuted.get(12));
+        assertTrue(permuted.get(13));
+        assertTrue(permuted.get(14));
+        assertTrue(permuted.get(15));
+    }
+
+    @Test
     public void permutationTest() {
         BitSet input = new BitSet(64);
         int[] table = {2, 5, 3, 4, 1, 9, 6, 7, 8, 10};
