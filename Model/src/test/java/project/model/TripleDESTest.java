@@ -2,10 +2,44 @@ package project.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigInteger;
 import java.util.BitSet;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class TripleDESTest {
+
+    @Test
+    public void encryptionTest() {
+        BitOperations bo = new BitOperations();
+
+        BitSet key1 = new BitSet(); // (string "@@@@@@@@")
+        BitSet key2 = new BitSet(); // (string "AAAAAAAA")
+        BitSet key3 = new BitSet(); // (string "DDDDDDDD")
+        for(int i = 0; i < 8; i++) {
+            key1.set(1 + i * 8);
+            key2.set(1 + i * 8);
+            key2.set(7 + i * 8);
+            key3.set(1 + i * 8);
+            key3.set(5 + i * 8);
+        }
+
+
+        // message (string "FFFFFFFF")
+        BitSet message = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            message.set(1 + i * 8);
+            message.set(5 + i * 8);
+            message.set(6 + i * 8);
+        }
+
+        // encryption
+        TripleDES d = new TripleDES(key1, key2, key3);
+        BitSet encrypted = d.encrypt(message);
+        String encStr = bo.bitSetToString(encrypted);
+        String hexString = new BigInteger(encStr, 2).toString(16);
+        assertEquals(hexString, "8bd6c4f0bdc50e43");
+    }
 
     @Test
     void encryptAndDecryptTest() {
