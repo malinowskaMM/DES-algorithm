@@ -142,7 +142,6 @@ public class DES {
             }
 
             int valueFromSBox = getFromSBox(i, value1Dec, value2Dec);
-//            int valueFromSBox = getFromSBox(7 - i, value1Dec, value2Dec);
             BitSet valueFromSBoxBin = bo.intToBitSet(valueFromSBox, 4);
             for (int n = 0; n < 4; n++) {
                 if(valueFromSBoxBin.get(n)) {
@@ -170,29 +169,30 @@ public class DES {
     public BitSet cypherOneBlock(BitSet bits) {
         bits = bo.permutation(bits, initialPermutationTable);
         BitSet[] split = bo.split(bits, 64);
-        BitSet L0 = split[0];
-        BitSet R0 = split[1];
+        BitSet left = split[0];
+        BitSet right = split[1];
 
-        BitSet R1 = (BitSet) R0.clone();
-        R1 = FFunction(R1, keys.get(0));
-        R1.xor(L0);
+        BitSet rightOld = (BitSet) right.clone();
+
+        right = FFunction(right, keys.get(0));
+        right.xor(left);
 
         for (int i = 1; i < 16; i++) {
-            BitSet[] a = oneRound(L0, R1, keys.get(i));
-            L0 = a[0];
-            R1 = a[1];
+            BitSet[] a = oneRound(rightOld, right, keys.get(i));
+            rightOld = a[0];
+            right = a[1];
         }
-        bits = bo.concatenation(R1, L0, 32); // R1, L0 in reverse order to cancel out reversion in oneRound()
+        bits = bo.concatenation(right, rightOld, 32); // R1, L0 in reverse order to cancel out reversion in oneRound()
         bits = bo.permutation(bits, inversedInitialPermutationTable);
 
         return bits;
     }
 
     public BitSet[] oneRound(BitSet left, BitSet right, BitSet subKey) {
-        BitSet R = (BitSet) right.clone();
-        R = FFunction(R, subKey);
-        R.xor(left);
-        return new BitSet[] {right, R};
+        BitSet rightOld = (BitSet) right.clone();
+        right = FFunction(right, subKey);
+        right.xor(left);
+        return new BitSet[] {rightOld, right};
     }
 
 }
