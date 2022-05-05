@@ -82,7 +82,6 @@ class BitOperationsTest {
         assertEquals(bo.concatenation(bitSet1, bitSet2, 6), bitSet3);
     }
 
-
     @Test
     public void reverseKeysOrderTest() {
         Keys k = new Keys();
@@ -134,7 +133,6 @@ class BitOperationsTest {
         assertEquals(split[1].cardinality(), 2);
     }
 
-
     @Test
     public void splitTestII() {
         BitSet input = new BitSet(6);
@@ -151,10 +149,6 @@ class BitOperationsTest {
         assertEquals(bo.split(input, 6)[0], result1);
         assertEquals(bo.split(input, 6)[1], result2);
     }
-
-
-
-
 
     @Test
     public void permutationTest_II() {
@@ -223,17 +217,16 @@ class BitOperationsTest {
         assertEquals(bo.permutation(input, table), result);
     }
 
-
     @Test
     public void bitSetToIntTest() {
         BitSet bs = new BitSet();
         bs.set(0);
         bs.set(4);
-        int v = bo.bitSetToInt(bs, 5);
+        int v = BitOperations.bitSetToInt(bs, 5);
         assertEquals(v, 17);
 
         bs.set(1);
-        v = bo.bitSetToInt(bs, 5);
+        v = BitOperations.bitSetToInt(bs, 5);
         assertEquals(v, 25);
 
         bs.clear();
@@ -242,7 +235,7 @@ class BitOperationsTest {
     @Test
     public void intToBitSetTest() {
         int v = 3;
-        BitSet bs = bo.intToBitSet(v, 4);
+        BitSet bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 2);
         assertTrue(bs.get(2));
         assertTrue(bs.get(3));
@@ -253,9 +246,25 @@ class BitOperationsTest {
         assertTrue(bs.get(0));
 
         v = 1;
-        bs = bo.intToBitSet(v, 4);
+        bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 1);
         assertTrue(bs.get(3));
+    }
+
+    @Test
+    public void bitSetToStringASCIITest() {
+        BitSet bs = new BitSet(); // string "DADADADA"
+        for (int i = 0; i < 8; i++) {
+                bs.set(1 + i * 8);
+            if(i % 2 == 0) {
+                bs.set(5 + i * 8);
+            } else {
+                bs.set(7 + i * 8);
+            }
+        }
+
+        System.out.println(BitOperations.bitSetToStringASCII(bs));
+        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADA");
     }
 
     @Test

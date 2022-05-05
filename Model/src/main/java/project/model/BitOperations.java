@@ -26,7 +26,7 @@ public class BitOperations {
         return reversed;
     }
 
-    public BitSet reverseBitOrder(BitSet bits, int length) {
+    public static BitSet reverseBitOrder(BitSet bits, int length) {
         BitSet result = new BitSet();
         for (int i = 0; i < length; i ++) {
             if(bits.get(i)) {
@@ -88,7 +88,7 @@ public class BitOperations {
         return result;
     }
 
-    public int bitSetToInt(BitSet bs, int len) {
+    public static int bitSetToInt(BitSet bs, int len) {
         BitSet rev = reverseBitOrder(bs, len);
         long[] l = rev.toLongArray();
         return (int)l[0];
@@ -106,7 +106,7 @@ public class BitOperations {
         return result.toString();
     }
 
-    public BitSet intToBitSet(int value, int len) {
+    public static BitSet intToBitSet(int value, int len) {
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
             int v = (((value % 2) == 0) ? 0 : 1);
@@ -144,40 +144,20 @@ public class BitOperations {
         return bits;
     }
 
-
     public static String bitSetToStringASCII(BitSet bits) {
-        if (bits.isEmpty()) {
-            return "0";
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = bits.length() - 1; i >= 0; i--) {
-            if (bits.get(i)) {
-                sb.append("1");
-            } else {
-                sb.append("0");
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < bits.size()/8; i++) {
+            BitSet singleChar = new BitSet();
+            for(int j = 0; j < 8; j++) {
+                if (bits.get(j + i * 8))
+                    singleChar.set(j);
             }
+            int singleCharInDec = bitSetToInt(singleChar, 8);
+            result.append((char)singleCharInDec);
         }
 
-        StringBuilder resultASCII = new StringBuilder();
-        int div = sb.toString().length()/7;
-        String[] strings = new String[div];
-        int[] intsFromStrings =  new int[div];
-
-        for(int i = 0; i < div; i++) {
-            String string = "";
-            StringBuilder stringBuilder = new StringBuilder(string);
-            int end = (i+1) * 7;
-            for(int j = i * 7; j < end; j++) {
-                stringBuilder.append(sb.toString().charAt(j));
-            }
-            strings[i] = stringBuilder.toString();
-            intsFromStrings[i] = Integer.parseInt(strings[i], 2);
-            resultASCII.append((char)intsFromStrings[i]);
-        }
-
-        return resultASCII.toString();
+        return result.toString();
     }
+
 
 }
