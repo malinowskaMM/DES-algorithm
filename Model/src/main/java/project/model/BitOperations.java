@@ -129,10 +129,10 @@ public class BitOperations {
         return result;
     }
 
-    public static BitSet bitSetFromStringASCII(String str) {
+    public static BitSet stringASCIIFromBitSet(String str) {
         BitSet result = new BitSet();
         for (int i = 0; i < str.length(); i++) {
-            int v = (int)str.charAt(i);
+            int v = str.charAt(i);
             BitSet bs = intToBitSet(v, 8);
             for(int j = 0; j < 8; j++) {
                 if(bs.get(j)) {
@@ -152,7 +152,8 @@ public class BitOperations {
                     singleChar.set(j);
             }
             int singleCharInDec = bitSetToInt(singleChar, 8);
-            result.append((char)singleCharInDec);
+            if(singleCharInDec != 0)
+                result.append((char)singleCharInDec);
         }
 
         return result.toString();

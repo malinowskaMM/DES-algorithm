@@ -3,6 +3,7 @@ package project.model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,35 @@ class TripleDESTest {
     }
 
     @Test
-    void encryptAndDecryptTest() {
+    public void encryptAndDecryptTest_II() {
+        List<BitSet> keys = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            BitSet key = new BitSet();
+            for (int j = 0; j < 64; j++) {
+                if((int)Math.round(Math.random()) == 1) {
+                    key.set(j);
+                }
+            }
+            keys.add(key);
+        }
+        TripleDES tripleDES = new TripleDES(keys.get(0), keys.get(1), keys.get(2));
+
+        String[] msg = {"Michal", "Magda", "kOpeRnik", "7e2_z6!", "b", "@@@oKp", "   [    "};
+        ArrayList<String> decrypted = new ArrayList<>();
+        for(String s : msg) {
+            BitSet bs = BitOperations.stringASCIIFromBitSet(s);
+            BitSet encryptedBS = tripleDES.encrypt(bs);
+            BitSet decryptedBS = tripleDES.decrypt(encryptedBS);
+            decrypted.add(BitOperations.bitSetToStringASCII(decryptedBS));
+        }
+
+        for(int i = 0; i < msg.length; i++) {
+            assertEquals(msg[i], decrypted.get(i));
+        }
+    }
+
+    @Test
+    public void encryptAndDecryptTest() {
         BitSet originalMessage = new BitSet(64);
         originalMessage.set(0);
         originalMessage.set(3, 11);

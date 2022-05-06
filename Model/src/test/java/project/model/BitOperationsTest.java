@@ -250,7 +250,7 @@ class BitOperationsTest {
         assertTrue(bs.get(3));
 
         v = 8;
-        bs = bo.intToBitSet(v, 4);
+        bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 1);
         assertTrue(bs.get(0));
 
@@ -263,7 +263,7 @@ class BitOperationsTest {
     @Test
     public void bitSetToStringASCIITest() {
         BitSet bs = new BitSet();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 14; i++) {
                 bs.set(1 + i * 8);
             if(i % 2 == 0) {
                 bs.set(5 + i * 8);
@@ -272,13 +272,13 @@ class BitOperationsTest {
             }
         }
 
-        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADADADADADA");
+        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADADADADA");
     }
 
     @Test
     public void bitSetFromStringASCIITest() {
         String testString = "ok"; //01101111 01101011
-        BitSet bs = BitOperations.bitSetFromStringASCII(testString);
+        BitSet bs = BitOperations.stringASCIIFromBitSet(testString);
 
         assertEquals(bs.cardinality(), 11);
         assertFalse(bs.get(0));
@@ -289,7 +289,7 @@ class BitOperationsTest {
 
         String ts = "PPPPPPBBBBB"; // 01010000 01010000 01010000 01010000 01010000 01010000 01000010 01000010 01000010 01000010 01000010
         bs.clear();
-        bs = BitOperations.bitSetFromStringASCII(ts);
+        bs = BitOperations.stringASCIIFromBitSet(ts);
         assertEquals(bs.cardinality(), 22);
     }
 }
