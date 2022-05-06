@@ -21,9 +21,7 @@ class BitOperationsTest {
         BitSet subKey = new BitSet(64);
         subKey.set(0, 2);
         subKey.set(3);
-        System.out.println(bo.bitSetToString(subKey));
         BitSet result = bo.leftShift(subKey, 64, 1);
-        System.out.println(bo.bitSetToString(result));
 
         assertEquals(result.cardinality(), 3);
         assertTrue(result.get(0));
@@ -37,9 +35,11 @@ class BitOperationsTest {
         bs.set(0);
         bs.set(63);
         bs.set(3);
-        System.out.println(bo.bitSetToString(bs));
         BitSet result = bo.leftShift(bs, 64, 1);
-        System.out.println(bo.bitSetToString(result));
+        assertEquals(result.cardinality(), 3);
+        assertTrue(result.get(2));
+        assertTrue(result.get(63));
+        assertTrue(result.get(62));
     }
 
     @Test
@@ -49,9 +49,7 @@ class BitOperationsTest {
         bs.set(1);
         bs.set(34);
         bs.set(63);
-        System.out.println(bo.bitSetToString(bs));
         BitSet result = bo.leftShift(bs, 64, 2);
-        System.out.println(bo.bitSetToString(result));
 
         assertEquals(result.cardinality(), 4);
         assertTrue(result.get(63));
@@ -276,9 +274,33 @@ class BitOperationsTest {
     }
 
     @Test
-    public void bitSetFromStringASCIITest() {
+    public void stringASCIIToBitSetTest_II() {
+        String str = "ÖÄð½ÅC";
+        BitSet bs = BitOperations.stringASCIIToBitSet(str);
+
+        BitSet key1 = new BitSet(); // (string "@@@@@@@@")
+        BitSet key2 = new BitSet(); // (string "AAAAAAAA")
+        BitSet key3 = new BitSet(); // (string "DDDDDDDD")
+        for(int i = 0; i < 8; i++) {
+            key1.set(1 + i * 8);
+            key2.set(1 + i * 8);
+            key2.set(7 + i * 8);
+            key3.set(1 + i * 8);
+            key3.set(5 + i * 8);
+        }
+
+        TripleDES tripleDes = new TripleDES(key1, key2, key3);
+        BitSet decrypted = tripleDes.decrypt(bs);
+        BitOperations bo = new BitOperations();
+        String decStr = bo.bitSetToString(decrypted);
+        System.out.println("decStr = " + decStr);
+        String decASCII = BitOperations.bitSetToStringASCII(decrypted);
+        System.out.println("decASCII = " + decASCII);
+    }
+    @Test
+    public void stringASCIIToBitSetTest() {
         String testString = "ok"; //01101111 01101011
-        BitSet bs = BitOperations.stringASCIIFromBitSet(testString);
+        BitSet bs = BitOperations.stringASCIIToBitSet(testString);
 
         assertEquals(bs.cardinality(), 11);
         assertFalse(bs.get(0));
@@ -289,7 +311,14 @@ class BitOperationsTest {
 
         String ts = "PPPPPPBBBBB"; // 01010000 01010000 01010000 01010000 01010000 01010000 01000010 01000010 01000010 01000010 01000010
         bs.clear();
-        bs = BitOperations.stringASCIIFromBitSet(ts);
+        bs = BitOperations.stringASCIIToBitSet(ts);
         assertEquals(bs.cardinality(), 22);
+        for (int i = 0; i < 11; i++) {
+            assertTrue(bs.get(1 + i * 8));
+            if(i < 6)
+                assertTrue(bs.get(3 + i * 8));
+            if(i >= 6)
+                assertTrue(bs.get(6 + i * 8));
+        }
     }
 }

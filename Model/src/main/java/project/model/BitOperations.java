@@ -129,7 +129,7 @@ public class BitOperations {
         return result;
     }
 
-    public static BitSet stringASCIIFromBitSet(String str) {
+    public static BitSet stringASCIIToBitSet(String str) {
         BitSet result = new BitSet();
         for (int i = 0; i < str.length(); i++) {
             int v = str.charAt(i);

@@ -133,16 +133,16 @@ public class DES {
             if(value1Bin.isEmpty()) {
                 value1Dec = 0;
             } else {
-                value1Dec = bo.bitSetToInt(value1Bin, 2);
+                value1Dec = BitOperations.bitSetToInt(value1Bin, 2);
             }
             if(value2Bin.isEmpty()) {
                 value2Dec = 0;
             } else {
-                value2Dec = bo.bitSetToInt(value2Bin, 4);
+                value2Dec = BitOperations.bitSetToInt(value2Bin, 4);
             }
 
             int valueFromSBox = getFromSBox(i, value1Dec, value2Dec);
-            BitSet valueFromSBoxBin = bo.intToBitSet(valueFromSBox, 4);
+            BitSet valueFromSBoxBin = BitOperations.intToBitSet(valueFromSBox, 4);
             for (int n = 0; n < 4; n++) {
                 if(valueFromSBoxBin.get(n)) {
                     result.set(4 * i + n);
@@ -182,7 +182,7 @@ public class DES {
             rightOld = a[0];
             right = a[1];
         }
-        bits = bo.concatenation(right, rightOld, 32); // R1, L0 in reverse order to cancel out reversion in oneRound()
+        bits = bo.concatenation(right, rightOld, 32);
         bits = bo.permutation(bits, inversedInitialPermutationTable);
 
         return bits;

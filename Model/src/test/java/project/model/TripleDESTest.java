@@ -25,7 +25,6 @@ class TripleDESTest {
             key3.set(5 + i * 8);
         }
 
-
         // message (string "FFFFFFFF")
         BitSet message = new BitSet();
         for(int i = 0; i < 8; i++) {
@@ -38,8 +37,18 @@ class TripleDESTest {
         TripleDES d = new TripleDES(key1, key2, key3);
         BitSet encrypted = d.encrypt(message);
         String encStr = bo.bitSetToString(encrypted);
+        System.out.println("TripleDESTTest:encryptionTest:encStr = " + encStr);
+        String encASCII = BitOperations.bitSetToStringASCII(encrypted);
+        System.out.println("TripleDESTTest:encryptionTest:encASCII = " + encASCII);
+
         String hexString = new BigInteger(encStr, 2).toString(16);
         assertEquals(hexString, "8bd6c4f0bdc50e43");
+
+        BitSet decrypted = d.decrypt(encrypted);
+        String decStr = bo.bitSetToString(decrypted);
+        System.out.println("TripleDESTTest:encryptionTest:decStr = " + decStr);
+        String decASCII = BitOperations.bitSetToStringASCII(decrypted);
+        System.out.println("TripleDESTTest:encryptionTest:decASCII = " + decASCII);
     }
 
     @Test
@@ -59,7 +68,7 @@ class TripleDESTest {
         String[] msg = {"Michal", "Magda", "kOpeRnik", "7e2_z6!", "b", "@@@oKp", "   [    "};
         ArrayList<String> decrypted = new ArrayList<>();
         for(String s : msg) {
-            BitSet bs = BitOperations.stringASCIIFromBitSet(s);
+            BitSet bs = BitOperations.stringASCIIToBitSet(s);
             BitSet encryptedBS = tripleDES.encrypt(bs);
             BitSet decryptedBS = tripleDES.decrypt(encryptedBS);
             decrypted.add(BitOperations.bitSetToStringASCII(decryptedBS));

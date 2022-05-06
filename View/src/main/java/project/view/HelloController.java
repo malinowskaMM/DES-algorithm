@@ -58,7 +58,7 @@ public class HelloController {
     BitSet generateKey(TextField textField) {
         String keyString = key.getKey();
         textField.setText(keyString);
-        return bitOperations.stringASCIIFromBitSet(keyString);
+        return BitOperations.stringASCIIToBitSet(keyString);
     }
 
     @FXML private void saveKeysToFile() {
@@ -84,11 +84,11 @@ public class HelloController {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
             String fromFile = Files.readString(selectedFile.toPath());
-            firstKey = bitOperations.stringASCIIFromBitSet(fromFile.substring(0, 8));
+            firstKey = BitOperations.stringASCIIToBitSet(fromFile.substring(0, 8));
             key1Field.setText(fromFile.substring(0, 8));
-            secondKey = bitOperations.stringASCIIFromBitSet(fromFile.substring(8, 16));
+            secondKey = BitOperations.stringASCIIToBitSet(fromFile.substring(8, 16));
             key2Field.setText(fromFile.substring(8, 16));
-            thirdKey = bitOperations.stringASCIIFromBitSet(fromFile.substring(16, 24));
+            thirdKey = BitOperations.stringASCIIToBitSet(fromFile.substring(16, 24));
             key3Field.setText(fromFile.substring(16, 24));
             }
         }
@@ -107,7 +107,6 @@ public class HelloController {
             byteArea = getByteAreaFromFile(selectedFile);
             plaintextString = new String(byteArea,StandardCharsets.UTF_8);
             plaintextArea.setText(plaintextString);
-            //dodać zapis String.ToByteArea
         }
     }
 
@@ -119,10 +118,6 @@ public class HelloController {
             byteArea = getByteAreaFromFile(selectedFile);
             cryptogramString = new String(byteArea,StandardCharsets.UTF_8);
             cryptogramArea.setText(cryptogramString);
-            //dodać zapis String.ToByteArea
-            //szyfrujemy wszystko jako pliki binarne - nieważne co to jest pdf, etc
-            //ostatni blok uzupełnić zerami (bloki muszą być pełne)
-            //po szufrowaniu musi miec taką długość jak przed - odciąć wyzerowany blok (dane w nagłóowku musz sie zgadzać z fiz reprezentacją pliku)
         }
     }
 
@@ -182,9 +177,10 @@ public class HelloController {
         if(plaintextArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
-        tripleDES = new TripleDES(bitOperations.stringASCIIFromBitSet(key1Field.getText()), bitOperations.stringASCIIFromBitSet(key2Field.getText()), bitOperations.stringASCIIFromBitSet(key3Field.getText()));
-        encrypted = tripleDES.encrypt(bitOperations.stringASCIIFromBitSet(plaintextArea.getText()));
-        cryptogramArea.setText(bitOperations.bitSetToStringASCII(encrypted));
+        tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+        BitSet message = BitOperations.stringASCIIToBitSet(plaintextArea.getText());
+        encrypted = tripleDES.encrypt(message);
+        cryptogramArea.setText(BitOperations.bitSetToStringASCII(encrypted));
         return 0;
     }
 
@@ -201,9 +197,11 @@ public class HelloController {
         if(cryptogramArea.toString().isEmpty()) {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
-        tripleDES = new TripleDES(bitOperations.stringASCIIFromBitSet(key1Field.getText()), bitOperations.stringASCIIFromBitSet(key2Field.getText()), bitOperations.stringASCIIFromBitSet(key3Field.getText()));
-        decrypted = tripleDES.decrypt(bitOperations.stringASCIIFromBitSet(cryptogramArea.getText()));
-        plaintextArea.setText(bitOperations.bitSetToStringASCII(decrypted));
+        tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+        String str = cryptogramArea.getText();
+        BitSet bs = BitOperations.stringASCIIToBitSet(str);
+        decrypted = tripleDES.decrypt(bs);
+        plaintextArea.setText(BitOperations.bitSetToStringASCII(decrypted));
         return 0;
     }
 
