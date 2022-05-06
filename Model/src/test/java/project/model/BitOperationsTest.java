@@ -101,7 +101,7 @@ class BitOperationsTest {
     }
 
     @Test
-    public void reveBitOrderTest() {
+    public void reverseBitOrderTest() {
         BitSet bs = new BitSet();
         BitSet rev = BitOperations.reverseBitOrder(bs, 4);
 
@@ -276,21 +276,20 @@ class BitOperationsTest {
     }
 
     @Test
-    public void stringToBitSetTest() {
-        BitSet bs = new BitSet();
-        String testString = "ok"; //1101111 1101011
-        bs = bo.bitSetFromStringASCII(testString);
+    public void bitSetFromStringASCIITest() {
+        String testString = "ok"; //01101111 01101011
+        BitSet bs = BitOperations.bitSetFromStringASCII(testString);
 
-        String result="11011111101011";
-        StringBuilder stringBuilder = new StringBuilder(result);
-        stringBuilder = stringBuilder.reverse();
-        BitSet bsResult = new BitSet();
-        for(int i = 0; i < result.length(); i++) {
-            if(stringBuilder.toString().charAt(i) == '1') {
-                bsResult.set(i);
-            }
-        }
-        assertEquals(BitOperations.bitSetToStringASCII(bsResult), "ok");
-        assertEquals(bs, bsResult);
+        assertEquals(bs.cardinality(), 11);
+        assertFalse(bs.get(0));
+        assertFalse(bs.get(3));
+        assertFalse(bs.get(8));
+        assertFalse(bs.get(11));
+        assertFalse(bs.get(13));
+
+        String ts = "PPPPPPBBBBB"; // 01010000 01010000 01010000 01010000 01010000 01010000 01000010 01000010 01000010 01000010 01000010
+        bs.clear();
+        bs = BitOperations.bitSetFromStringASCII(ts);
+        assertEquals(bs.cardinality(), 22);
     }
 }

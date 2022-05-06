@@ -129,29 +129,18 @@ public class BitOperations {
         return result;
     }
 
-    public BitSet bitSetFromStringASCII(String in) {
-        if (in.isEmpty()) {
-            return new BitSet();
-        }
-        String[] strings = new String[in.length()];
-        for (int i = 0; i < in.length(); i++) {
-            strings[i] = Integer.toBinaryString(in.charAt(i));
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            stringBuilder.append(strings[i]);
-        }
-
-        stringBuilder = stringBuilder.reverse();
-
-        BitSet bits = new BitSet();
-
-        for (int i = 0; i < stringBuilder.toString().length(); i++) {
-                if(stringBuilder.toString().charAt(i) == '1') {
-                    bits.set(i);
+    public static BitSet bitSetFromStringASCII(String str) {
+        BitSet result = new BitSet();
+        for (int i = 0; i < str.length(); i++) {
+            int v = (int)str.charAt(i);
+            BitSet bs = intToBitSet(v, 8);
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(j)) {
+                    result.set(j + i * 8);
                 }
+            }
         }
-        return bits;
+        return result;
     }
 
     public static String bitSetToStringASCII(BitSet bits) {
@@ -168,6 +157,4 @@ public class BitOperations {
 
         return result.toString();
     }
-
-
 }
