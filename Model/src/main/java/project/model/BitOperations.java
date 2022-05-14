@@ -1,5 +1,6 @@
 package project.model;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -116,6 +117,33 @@ public class BitOperations {
         return result.toString();
     }
 
+    public static BitSet hexToBitSet(String hexString) {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        for(int i = hexString.length() - 2; i >= 0; i -= 2) {
+            String data = hexString.substring(i, i + 2);
+            bout.write(Integer.parseInt(data, 16));
+        }
+        BitSet bs = BitSet.valueOf(bout.toByteArray());
+        return reverseBitOrder(bs, 64);
+    }
+
+    public static String bitSetToHex(final BitSet bitset, final int minLength) {
+        final StringBuilder result = new StringBuilder();
+        for (int bytenum = 0; bytenum < minLength / 2; bytenum++) {
+            byte v = 0;
+            for (int bit = 0, mask = 0x80; mask >= 0x01; bit++, mask /= 2) {
+                if (bitset.get((bytenum * 8) + bit)) {
+                    v |= mask;
+                }
+            }
+            result.append(String.format("%02X", v));
+        }
+        while (result.length() < minLength) {
+            result.append("00");
+        }
+        return result.toString();
+    }
+
     public static BitSet intToBitSet(int value, int len) {
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
@@ -152,10 +180,39 @@ public class BitOperations {
                     singleChar.set(j);
             }
             int singleCharInDec = bitSetToInt(singleChar, 8);
-            if(singleCharInDec != 0)
-                result.append((char)singleCharInDec);
+//            if(singleCharInDec != 0)
+            result.append((char)singleCharInDec);
+        }
+        for(int i =  bits.size()/8 - 1; i >= 0; i--) {
+            if((int)result.charAt(i) == 0) {
+                result.deleteCharAt(i);
+            }
+            else
+                break;
         }
 
         return result.toString();
+    }
+
+    public static String bitSetAsAsciiNumbers(BitSet bs) {
+        if(bs.size() != 64)
+            return "BitSet size != 64";
+
+        List<BitSet> singleNumbers = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            BitSet singleNum = new BitSet();
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(j + i * 8))
+                    singleNum.set(j);
+            }
+            singleNumbers.add(singleNum);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 8; i++) {
+            sb.append(BitOperations.bitSetToInt(singleNumbers.get(i), 8));
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 }

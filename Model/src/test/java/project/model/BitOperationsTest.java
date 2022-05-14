@@ -17,6 +17,48 @@ class BitOperationsTest {
     }
 
     @Test
+    public void hexToBitSetTest() {
+        String s = "3D00000000003D13";
+//        BitSet bs = new BitSet();
+        BitSet bs = BitOperations.hexToBitSet(s);
+
+        BitSet expectedResult = new BitSet();
+        expectedResult.set(2, 6);
+        expectedResult.set(7);
+        expectedResult.set(50, 54);
+        expectedResult.set(55);
+        expectedResult.set(59);
+        expectedResult.set(62);
+        expectedResult.set(63);
+
+        assertEquals(bs, expectedResult);
+    }
+
+    @Test
+    public void bitset2HexTest() {
+        BitSet bs = new BitSet();
+//        for(int i = 0; i < 6; i++) {
+//            bs.set(1 + i * 8);
+//        }
+        bs.set(2, 6);
+        String s = BitOperations.bitSetToHex(bs, 16);
+        System.out.println(BitOperations.bitSetAsAsciiNumbers(bs));
+        System.out.println(s);
+        assertTrue(false); // test niedokonczony
+    }
+
+    @Test
+    public void bitSetAsAsciiNumbersTest() {
+        BitSet bs = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            bs.set(7 + i * 8);
+            bs.set(0 + i * 8);
+        }
+        String str = BitOperations.bitSetAsAsciiNumbers(bs);
+        System.out.println("str = " + str);
+    }
+
+    @Test
     public void leftShiftTest() {
         BitSet subKey = new BitSet(64);
         subKey.set(0, 2);
@@ -278,11 +320,13 @@ class BitOperationsTest {
         String str = "ÖÄð½ÅC";
         BitSet bs = BitOperations.stringASCIIToBitSet(str);
 
-        BitSet key1 = new BitSet(); // (string "@@@@@@@@")
+        BitSet key1 = new BitSet(); // (string "LLLLLLLL")
         BitSet key2 = new BitSet(); // (string "AAAAAAAA")
         BitSet key3 = new BitSet(); // (string "DDDDDDDD")
         for(int i = 0; i < 8; i++) {
             key1.set(1 + i * 8);
+            key1.set(4 + i * 8);
+            key1.set(5 + i * 8);
             key2.set(1 + i * 8);
             key2.set(7 + i * 8);
             key3.set(1 + i * 8);
@@ -293,10 +337,10 @@ class BitOperationsTest {
         BitSet decrypted = tripleDes.decrypt(bs);
         BitOperations bo = new BitOperations();
         String decStr = bo.bitSetToString(decrypted);
-        System.out.println("decStr = " + decStr);
         String decASCII = BitOperations.bitSetToStringASCII(decrypted);
-        System.out.println("decASCII = " + decASCII);
     }
+
+
     @Test
     public void stringASCIIToBitSetTest() {
         String testString = "ok"; //01101111 01101011

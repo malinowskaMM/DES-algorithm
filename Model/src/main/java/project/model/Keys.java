@@ -50,7 +50,6 @@ public class Keys {
     }
 
     public List<BitSet> generate16keys(BitSet key) {
-//        key = removeParityBitsFromKey(key);
         BitSet permutedKey = bo.permutation(key, PC1KeyPermutationTable);
         BitSet[] splitKey = bo.split(permutedKey, 56);
         BitSet leftSubKey = splitKey[0];

@@ -56,9 +56,15 @@ public class HelloController {
     }
 
     BitSet generateKey(TextField textField) {
-        String keyString = key.getKey();
-        textField.setText(keyString);
-        return BitOperations.stringASCIIToBitSet(keyString);
+        BitSet key = new BitSet();
+        for (int j = 0; j < 64; j++) {
+            if((int)Math.round(Math.random()) == 1) {
+                key.set(j);
+            }
+        }
+        String s = BitOperations.bitSetToHex(key, 16);
+        textField.setText(s);
+        return key;
     }
 
     @FXML private void saveKeysToFile() {
@@ -180,7 +186,7 @@ public class HelloController {
         tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
         BitSet message = BitOperations.stringASCIIToBitSet(plaintextArea.getText());
         encrypted = tripleDES.encrypt(message);
-        cryptogramArea.setText(BitOperations.bitSetToStringASCII(encrypted));
+        cryptogramArea.setText(BitOperations.bitSetToHex(encrypted, 16));
         return 0;
     }
 
@@ -198,8 +204,8 @@ public class HelloController {
             openWarningDialog("Pusta wiadomosc do zakodowania");
             return -1;}
         tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
-        String str = cryptogramArea.getText();
-        BitSet bs = BitOperations.stringASCIIToBitSet(str);
+        String hex = cryptogramArea.getText();
+        BitSet bs = BitOperations.hexToBitSet(hex);
         decrypted = tripleDES.decrypt(bs);
         plaintextArea.setText(BitOperations.bitSetToStringASCII(decrypted));
         return 0;
