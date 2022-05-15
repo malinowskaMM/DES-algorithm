@@ -117,17 +117,48 @@ public class BitOperations {
         return result.toString();
     }
 
-    public static BitSet hexToBitSet(String hexString) {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        for(int i = hexString.length() - 2; i >= 0; i -= 2) {
-            String data = hexString.substring(i, i + 2);
-            bout.write(Integer.parseInt(data, 16));
+    public static int countTrailingEmptyBytes(BitSet bs) {
+        int emptyBytes = 0;
+        boolean firstBitSetFound = false;
+        for(int i = bs.size() - 1; i >= 0; i -= 8) {
+            if(firstBitSetFound) break;
+            boolean allZeros = true;
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(i - j)) {
+                    allZeros = false;
+                    firstBitSetFound = true;
+                }
+            }
+            if(allZeros)
+                emptyBytes++;
         }
-        BitSet bs = BitSet.valueOf(bout.toByteArray());
-        return reverseBitOrder(bs, 64);
+        return emptyBytes;
     }
 
-    public static String bitSetToHex(final BitSet bitset, final int minLength) {
+    // OK
+    public static BitSet hexToBitSet(String hexString) {
+
+        BitSet result = new BitSet();
+        int counter = 0;
+        for(int i = 0; i <= hexString.length() - 2; i += 2) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            String data = hexString.substring(i, i + 2); // str 2 chars
+            bout.write(Integer.parseInt(data, 16)); // int
+            BitSet singleChar = BitSet.valueOf(bout.toByteArray()); // bitset
+            singleChar = reverseBitOrder(singleChar, 8);
+            for(int j = 0; j < 8; j++) {
+                if(singleChar.get(j)) {
+                    result.set(j + counter * 8);
+                }
+            }
+            counter ++;
+        }
+        return result;
+    }
+
+    // OK
+    public static String bitSetToHex(final BitSet bitset) {
+        int minLength = bitset.size() / 4 - 2 * countTrailingEmptyBytes(bitset);
         final StringBuilder result = new StringBuilder();
         for (int bytenum = 0; bytenum < minLength / 2; bytenum++) {
             byte v = 0;
@@ -157,6 +188,7 @@ public class BitOperations {
         return result;
     }
 
+    // OK
     public static BitSet stringASCIIToBitSet(String str) {
         BitSet result = new BitSet();
         for (int i = 0; i < str.length(); i++) {

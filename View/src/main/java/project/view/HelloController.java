@@ -62,7 +62,7 @@ public class HelloController {
                 key.set(j);
             }
         }
-        String s = BitOperations.bitSetToHex(key, 16);
+        String s = BitOperations.bitSetToHex(key);
         textField.setText(s);
         return key;
     }
@@ -147,9 +147,7 @@ public class HelloController {
         firstKey = generateKey(key1Field);
     }
 
-    @FXML protected void generateSecondKey(ActionEvent event) {
-        secondKey = generateKey(key2Field);
-    }
+    @FXML protected void generateSecondKey(ActionEvent event) { secondKey = generateKey(key2Field); }
 
     @FXML protected void generateThirdKey(ActionEvent event) {
         thirdKey = generateKey(key3Field);
@@ -186,7 +184,7 @@ public class HelloController {
         tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
         BitSet message = BitOperations.stringASCIIToBitSet(plaintextArea.getText());
         encrypted = tripleDES.encrypt(message);
-        cryptogramArea.setText(BitOperations.bitSetToHex(encrypted, 16));
+        cryptogramArea.setText(BitOperations.bitSetToHex(encrypted));
         return 0;
     }
 

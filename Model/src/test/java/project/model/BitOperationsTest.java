@@ -21,7 +21,6 @@ class BitOperationsTest {
         String s = "3D00000000003D13";
 //        BitSet bs = new BitSet();
         BitSet bs = BitOperations.hexToBitSet(s);
-
         BitSet expectedResult = new BitSet();
         expectedResult.set(2, 6);
         expectedResult.set(7);
@@ -30,21 +29,34 @@ class BitOperationsTest {
         expectedResult.set(59);
         expectedResult.set(62);
         expectedResult.set(63);
-
         assertEquals(bs, expectedResult);
+
+        s = "3D00000000003D13F1";
+        BitSet bs2 = BitOperations.hexToBitSet(s);
+        expectedResult.set(64, 68);
+        expectedResult.set(71);
+        assertEquals(bs2, expectedResult);
     }
 
     @Test
     public void bitset2HexTest() {
         BitSet bs = new BitSet();
-//        for(int i = 0; i < 6; i++) {
-//            bs.set(1 + i * 8);
-//        }
+        bs.set(7);
         bs.set(2, 6);
-        String s = BitOperations.bitSetToHex(bs, 16);
-        System.out.println(BitOperations.bitSetAsAsciiNumbers(bs));
-        System.out.println(s);
-        assertTrue(false); // test niedokonczony
+        bs.set(50, 54);
+        bs.set(55);
+        bs.set(59);
+        bs.set(62);
+        bs.set(63);
+        String expectedResult = "3D00000000003D13";
+        String s = BitOperations.bitSetToHex(bs);
+        assertEquals(s, expectedResult);
+
+        bs.set(64, 68);
+        bs.set(71);
+        String s2 = BitOperations.bitSetToHex(bs);
+        expectedResult = "3D00000000003D13F1";
+        assertEquals(s2, expectedResult);
     }
 
     @Test
@@ -55,7 +67,6 @@ class BitOperationsTest {
             bs.set(0 + i * 8);
         }
         String str = BitOperations.bitSetAsAsciiNumbers(bs);
-        System.out.println("str = " + str);
     }
 
     @Test
