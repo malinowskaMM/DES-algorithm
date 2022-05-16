@@ -41,15 +41,15 @@ public class HelloController {
         return byteArea;
     }
 
-    private void saveToFile(byte[] byteArea, TextArea textArea) throws IOException {
+    private void saveToFile(byte[] byteArray, TextArea textArea) throws IOException {
         JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showSaveDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
             File file = new File(String.valueOf(selectedFile));
             try (FileWriter fw = new FileWriter(file)) {
-                byteArea = textArea.getText().getBytes(StandardCharsets.UTF_8);
-                fw.write(new String(byteArea,StandardCharsets.UTF_8));
+                byteArray = textArea.getText().getBytes(StandardCharsets.UTF_8);
+                fw.write(new String(byteArray,StandardCharsets.UTF_8));
                 fw.flush();
             }
         }
@@ -90,12 +90,12 @@ public class HelloController {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
             String fromFile = Files.readString(selectedFile.toPath());
-            firstKey = BitOperations.stringASCIIToBitSet(fromFile.substring(0, 8));
-            key1Field.setText(fromFile.substring(0, 8));
-            secondKey = BitOperations.stringASCIIToBitSet(fromFile.substring(8, 16));
-            key2Field.setText(fromFile.substring(8, 16));
-            thirdKey = BitOperations.stringASCIIToBitSet(fromFile.substring(16, 24));
-            key3Field.setText(fromFile.substring(16, 24));
+            firstKey = BitOperations.stringASCIIToBitSet(fromFile.substring(0, 16));
+            key1Field.setText(fromFile.substring(0, 16));
+            secondKey = BitOperations.stringASCIIToBitSet(fromFile.substring(16, 32));
+            key2Field.setText(fromFile.substring(16, 32));
+            thirdKey = BitOperations.stringASCIIToBitSet(fromFile.substring(32, 48));
+            key3Field.setText(fromFile.substring(32, 48));
             }
         }
 
@@ -106,13 +106,18 @@ public class HelloController {
     }
 
     @FXML protected void loadTextFromFile() throws IOException {
+
         JFileChooser jfc = new JFileChooser();
         int returnValue = jfc.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = jfc.getSelectedFile();
             byteArea = getByteAreaFromFile(selectedFile);
-            plaintextString = new String(byteArea,StandardCharsets.UTF_8);
-            plaintextArea.setText(plaintextString);
+
+            BitSet bs = BitSet.valueOf(byteArea);
+            String s = BitOperations.bitSetToStringASCII(bs);
+            plaintextArea.setText(s);
+//            plaintextString = new String(byteArea,StandardCharsets.UTF_8);
+//            plaintextArea.setText(plaintextString);
         }
     }
 

@@ -243,7 +243,7 @@ class BitOperationsTest {
             bs.set(1 + i * 8);
         }
         Keys k = new Keys();
-        BitSet permuted = bo.permutation(bs, k.PC1KeyPermutationTable);
+        BitSet permuted = BitOperations.permutation(bs, k.PC1KeyPermutationTable);
 
         assertEquals(permuted.cardinality(), 8);
         assertTrue(permuted.get(8));
@@ -266,7 +266,7 @@ class BitOperationsTest {
         input.set(6);
         input.set(9);
         assertEquals(input.cardinality(), 5);
-        BitSet output = bo.permutation(input, table);
+        BitSet output = BitOperations.permutation(input, table);
 
         assertFalse(output.get(0));
         assertFalse(output.get(1));

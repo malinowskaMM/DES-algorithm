@@ -7,7 +7,6 @@ import java.util.List;
 
 public class DES {
 
-    BitOperations bo = new BitOperations();
     List<BitSet> keys;
 
     public DES(List<BitSet> keys) {
@@ -157,13 +156,13 @@ public class DES {
 
     public BitSet FFunction(BitSet halfBlock, BitSet subKey) {
         // expansion permutation
-        halfBlock = bo.permutation(halfBlock, expansionPermutationTable);
+        halfBlock = BitOperations.permutation(halfBlock, expansionPermutationTable);
         // key mixing
         halfBlock.xor(subKey);
         // substitution
         halfBlock = substitution(halfBlock);
         // P permutation
-        halfBlock = bo.permutation(halfBlock, PPermutationTable);
+        halfBlock = BitOperations.permutation(halfBlock, PPermutationTable);
 
         return halfBlock;
     }
@@ -178,8 +177,8 @@ public class DES {
     }
 
     public BitSet cypherSingleBlock(BitSet bits) {
-        bits = bo.permutation(bits, initialPermutationTable);
-        BitSet[] split = bo.splitInHalf(bits, 64);
+        bits = BitOperations.permutation(bits, initialPermutationTable);
+        BitSet[] split = BitOperations.splitInHalf(bits, 64);
         BitSet left = split[0];
         BitSet right = split[1];
 
@@ -193,8 +192,8 @@ public class DES {
             rightOld = a[0];
             right = a[1];
         }
-        bits = bo.concatenation(right, rightOld, 32);
-        bits = bo.permutation(bits, inversedInitialPermutationTable);
+        bits = BitOperations.concatenation(right, rightOld, 32);
+        bits = BitOperations.permutation(bits, inversedInitialPermutationTable);
 
         return bits;
     }

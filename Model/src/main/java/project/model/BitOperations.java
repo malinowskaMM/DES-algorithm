@@ -1,15 +1,13 @@
 package project.model;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
 public class BitOperations {
 
-    public BitSet permutation(BitSet bits, int[] table) {
+    public static BitSet permutation(BitSet bits, int[] table) {
         int length = table.length;
         BitSet result = new BitSet(length);
         for (int i = 0; i < length; i++) {
@@ -39,7 +37,7 @@ public class BitOperations {
         return result;
     }
 
-    public BitSet concatenation(BitSet left, BitSet right, int sizeOfHalf) {
+    public static BitSet concatenation(BitSet left, BitSet right, int sizeOfHalf) {
         for(int i = 0; i < sizeOfHalf; i++) {
             if(right.get(i)) {
                 left.set(i + sizeOfHalf);
@@ -59,15 +57,13 @@ public class BitOperations {
             }
             result.add(part);
         }
-
         return result;
     }
 
-    public BitSet[] splitInHalf(BitSet block, int size) {
+    public static BitSet[] splitInHalf(BitSet block, int size) {
         int splitIndex = size / 2;
         BitSet l = block.get(0, splitIndex);
         BitSet r = block.get(splitIndex, size);
-
         return new BitSet[] {l, r};
     }
 
@@ -153,7 +149,6 @@ public class BitOperations {
         return emptyBytes;
     }
 
-    // OK
     public static BitSet hexToBitSet(String hexString) {
 
         BitSet result = new BitSet();
@@ -174,7 +169,6 @@ public class BitOperations {
         return result;
     }
 
-    // OK
     public static String bitSetToHex(final BitSet bitset) {
         int minLength = bitset.size() / 4 - 2 * countTrailingEmptyBytes(bitset);
         final StringBuilder result = new StringBuilder();
@@ -193,7 +187,6 @@ public class BitOperations {
         return result.toString();
     }
 
-    // nie trzeba zmieniać
     public static BitSet intToBitSet(int value, int len) {
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
@@ -207,7 +200,6 @@ public class BitOperations {
         return result;
     }
 
-    // OK
     public static BitSet stringASCIIToBitSet(String str) {
         BitSet result = new BitSet();
         for (int i = 0; i < str.length(); i++) {
@@ -222,7 +214,6 @@ public class BitOperations {
         return result;
     }
 
-    // OK raczej
     public static String bitSetToStringASCII(BitSet bits) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < bits.size()/8; i++) {
@@ -232,7 +223,6 @@ public class BitOperations {
                     singleChar.set(j);
             }
             int singleCharInDec = bitSetToInt(singleChar, 8);
-//            if(singleCharInDec != 0)
             result.append((char)singleCharInDec);
         }
         for(int i =  bits.size()/8 - 1; i >= 0; i--) {
@@ -245,26 +235,4 @@ public class BitOperations {
 
         return result.toString();
     }
-
-    /*public static String bitSetAsAsciiNumbers(BitSet bs) {
-        if(bs.size() != 64)
-            return "BitSet size != 64";
-
-        List<BitSet> singleNumbers = new ArrayList<>();
-        for(int i = 0; i < 8; i++) {
-            BitSet singleNum = new BitSet();
-            for(int j = 0; j < 8; j++) {
-                if(bs.get(j + i * 8))
-                    singleNum.set(j);
-            }
-            singleNumbers.add(singleNum);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < 8; i++) {
-            sb.append(BitOperations.bitSetToInt(singleNumbers.get(i), 8));
-            sb.append(" ");
-        }
-        return sb.toString();
-    }*/
 }
