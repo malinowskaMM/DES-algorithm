@@ -16,6 +16,7 @@ class KeysTest {
         k = new Keys();
     }
 
+
     @Test
     public void generate16keysTest() {
         BitSet key = new BitSet(64);
@@ -30,18 +31,6 @@ class KeysTest {
         for (int i = 0; i < 15; i++) {
             assertTrue(keys.get(i).length() <= 48);
         }
-    }
-
-    @Test
-    public void removeParityBitsFromKeyTest() {
-        BitSet bits = new BitSet(64);
-        bits.set(0, 64);
-        assertEquals(bits.cardinality(), 64);
-        assertEquals(bits.length(), 64);
-
-        bits = k.removeParityBitsFromKey(bits);
-        assertEquals(bits.cardinality(), 56);
-        assertEquals(bits.length(), 56);
     }
 
 }

@@ -1,5 +1,6 @@
 package project.model;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -26,7 +27,7 @@ public class BitOperations {
         return reversed;
     }
 
-    public BitSet reverseBitOrder(BitSet bits, int length) {
+    public static BitSet reverseBitOrder(BitSet bits, int length) {
         BitSet result = new BitSet();
         for (int i = 0; i < length; i ++) {
             if(bits.get(i)) {
@@ -61,26 +62,26 @@ public class BitOperations {
         }
 
         if (shift == 1) {
-            if (key.get(size - 1)) {
-                result.set(0);
+            if (key.get(0)) {
+                result.set(size - 1);
             }
 
-            for (int i = 0; i < size - 1; i++) {
+            for (int i = 1; i < size ; i++) {
                 if (key.get(i)) {
-                    result.set(i + 1);
+                    result.set(i - 1);
                 }
             }
         } else if (shift == 2) {
-            if (key.get(size - 2)) {
-                result.set(0);
+            if (key.get(0)) {
+                result.set(size - 2);
             }
-            if (key.get(size - 1)) {
-                result.set(1);
+            if (key.get(1)) {
+                result.set(size - 1);
             }
 
-            for (int i = 0; i < size - 2; i++) {
+            for (int i = 2; i < size; i++) {
                 if (key.get(i)) {
-                    result.set(i + 2);
+                    result.set(i - 2);
                 }
             }
         }
@@ -88,14 +89,24 @@ public class BitOperations {
         return result;
     }
 
-    public int bitSetToInt(BitSet bs, int len) {
+    public static int bitSetToInt(BitSet bs, int len) {
+        boolean isEmpty = true;
+        for (int i = 0; i < len; i++) {
+            if(bs.get(i)) {
+                isEmpty = false;
+                break;
+            }
+        }
+        if(isEmpty)
+            return 0;
+
         BitSet rev = reverseBitOrder(bs, len);
         long[] l = rev.toLongArray();
         return (int)l[0];
     }
 
     public String bitSetToString(BitSet bs) {
-        StringBuilder result = new StringBuilder("");
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < bs.size(); i++) {
             if(bs.get(i)) {
                 result.append("1");
@@ -106,7 +117,65 @@ public class BitOperations {
         return result.toString();
     }
 
-    public BitSet intToBitSet(int value, int len) {
+    public static int countTrailingEmptyBytes(BitSet bs) {
+        int emptyBytes = 0;
+        boolean firstBitSetFound = false;
+        for(int i = bs.size() - 1; i >= 0; i -= 8) {
+            if(firstBitSetFound) break;
+            boolean allZeros = true;
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(i - j)) {
+                    allZeros = false;
+                    firstBitSetFound = true;
+                }
+            }
+            if(allZeros)
+                emptyBytes++;
+        }
+        return emptyBytes;
+    }
+
+    // OK
+    public static BitSet hexToBitSet(String hexString) {
+
+        BitSet result = new BitSet();
+        int counter = 0;
+        for(int i = 0; i <= hexString.length() - 2; i += 2) {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            String data = hexString.substring(i, i + 2); // str 2 chars
+            bout.write(Integer.parseInt(data, 16)); // int
+            BitSet singleChar = BitSet.valueOf(bout.toByteArray()); // bitset
+            singleChar = reverseBitOrder(singleChar, 8);
+            for(int j = 0; j < 8; j++) {
+                if(singleChar.get(j)) {
+                    result.set(j + counter * 8);
+                }
+            }
+            counter ++;
+        }
+        return result;
+    }
+
+    // OK
+    public static String bitSetToHex(final BitSet bitset) {
+        int minLength = bitset.size() / 4 - 2 * countTrailingEmptyBytes(bitset);
+        final StringBuilder result = new StringBuilder();
+        for (int bytenum = 0; bytenum < minLength / 2; bytenum++) {
+            byte v = 0;
+            for (int bit = 0, mask = 0x80; mask >= 0x01; bit++, mask /= 2) {
+                if (bitset.get((bytenum * 8) + bit)) {
+                    v |= mask;
+                }
+            }
+            result.append(String.format("%02X", v));
+        }
+        while (result.length() < minLength) {
+            result.append("00");
+        }
+        return result.toString();
+    }
+
+    public static BitSet intToBitSet(int value, int len) {
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
             int v = (((value % 2) == 0) ? 0 : 1);
@@ -119,65 +188,63 @@ public class BitOperations {
         return result;
     }
 
-    public BitSet bitSetFromStringASCII(String in) {
-        if (in.isEmpty()) {
-            return new BitSet();
-        }
-        String[] strings = new String[in.length()];
-        for (int i = 0; i < in.length(); i++) {
-            strings[i] = Integer.toBinaryString(in.charAt(i));
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            stringBuilder.append(strings[i]);
-        }
-
-        stringBuilder = stringBuilder.reverse();
-
-        BitSet bits = new BitSet();
-
-        for (int i = 0; i < stringBuilder.toString().length(); i++) {
-                if(stringBuilder.toString().charAt(i) == '1') {
-                    bits.set(i);
+    // OK
+    public static BitSet stringASCIIToBitSet(String str) {
+        BitSet result = new BitSet();
+        for (int i = 0; i < str.length(); i++) {
+            int v = str.charAt(i);
+            BitSet bs = intToBitSet(v, 8);
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(j)) {
+                    result.set(j + i * 8);
                 }
+            }
         }
-        return bits;
+        return result;
     }
 
-
     public static String bitSetToStringASCII(BitSet bits) {
-        if (bits.isEmpty()) {
-            return "0";
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < bits.size()/8; i++) {
+            BitSet singleChar = new BitSet();
+            for(int j = 0; j < 8; j++) {
+                if (bits.get(j + i * 8))
+                    singleChar.set(j);
+            }
+            int singleCharInDec = bitSetToInt(singleChar, 8);
+//            if(singleCharInDec != 0)
+            result.append((char)singleCharInDec);
+        }
+        for(int i =  bits.size()/8 - 1; i >= 0; i--) {
+            if((int)result.charAt(i) == 0) {
+                result.deleteCharAt(i);
+            }
+            else
+                break;
+        }
+
+        return result.toString();
+    }
+
+    public static String bitSetAsAsciiNumbers(BitSet bs) {
+        if(bs.size() != 64)
+            return "BitSet size != 64";
+
+        List<BitSet> singleNumbers = new ArrayList<>();
+        for(int i = 0; i < 8; i++) {
+            BitSet singleNum = new BitSet();
+            for(int j = 0; j < 8; j++) {
+                if(bs.get(j + i * 8))
+                    singleNum.set(j);
+            }
+            singleNumbers.add(singleNum);
         }
 
         StringBuilder sb = new StringBuilder();
-
-        for (int i = bits.length() - 1; i >= 0; i--) {
-            if (bits.get(i)) {
-                sb.append("1");
-            } else {
-                sb.append("0");
-            }
+        for(int i = 0; i < 8; i++) {
+            sb.append(BitOperations.bitSetToInt(singleNumbers.get(i), 8));
+            sb.append(" ");
         }
-
-        StringBuilder resultASCII = new StringBuilder();
-        int div = sb.toString().length()/7;
-        String[] strings = new String[div];
-        int[] intsFromStrings =  new int[div];
-
-        for(int i = 0; i < div; i++) {
-            String string = "";
-            StringBuilder stringBuilder = new StringBuilder(string);
-            int end = (i+1) * 7;
-            for(int j = i * 7; j < end; j++) {
-                stringBuilder.append(sb.toString().charAt(j));
-            }
-            strings[i] = stringBuilder.toString();
-            intsFromStrings[i] = Integer.parseInt(strings[i], 2);
-            resultASCII.append((char)intsFromStrings[i]);
-        }
-
-        return resultASCII.toString();
+        return sb.toString();
     }
-
 }

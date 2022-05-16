@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,32 +20,6 @@ class DESTest {
         initialKey.set(2, 8);
         Keys k = new Keys();
         des = new DES(k.generate16keys(initialKey));
-    }
-
-    // unimportant test just to see how class BitSet works
-    @Test
-    public void bitSetClassBehaviourTest() {
-        // https://www.baeldung.com/java-bitset
-        BitSet bitSet = new BitSet(64);
-        assertEquals(bitSet.size(), 64);
-        int index = 6;
-        bitSet.set(6);
-        assertTrue(bitSet.get(index));
-        bitSet.clear(index);
-        assertFalse(bitSet.get(index));
-        bitSet.flip(index);
-        assertTrue(bitSet.get(index));
-
-        BitSet set1 = new BitSet();
-        set1.set(0, 5); // arg (inclusive, exclusive)
-        BitSet set2 = new BitSet();
-        set2.set(3, 10);
-        set1.and(set2); // logical AND
-        assertTrue(set1.get(3));
-        assertTrue(set1.get(4));
-        assertFalse(set1.get(2));
-        assertFalse(set1.get(5));
-        //set2.stream().forEach(System.out::print);
     }
 
     @Test
@@ -83,65 +59,22 @@ class DESTest {
         for(int i = 0; i < 8; i++) {
             key.set(1 + i * 8);
         }
-        System.out.println("KEY:");
-        String keyStr = bo.bitSetToString(key);
-        System.out.println(keyStr);
-
-        // key reverted
-        BitSet keyR = new BitSet();
-        for(int i = 0; i < 8; i++) {
-            keyR.set(6 + i * 8);
-        }
-        System.out.println("KEY reverted:");
-        String keyStrR = bo.bitSetToString(keyR);
-        System.out.println(keyStrR);
 
         // message
         BitSet message = new BitSet();
         for(int i = 0; i < 8; i++) {
             message.set(1 + i * 8);
         }
-        System.out.println("MSG:");
-        String msgStr = bo.bitSetToString(message);
-        System.out.println(msgStr);
-
-
-        // message reverted
-        BitSet messageR = new BitSet();
-        for(int i = 0; i < 8; i++) {
-            messageR.set(6 + i * 8);
-        }
-        System.out.println("MSG reverted:");
-        String msgStrR = bo.bitSetToString(messageR);
-        System.out.println(msgStrR);
 
         Keys k = new Keys();
         List<BitSet> subKeys = k.generate16keys(key);
-        List<BitSet> subKeysR = k.generate16keys(key);
 
         // encryption
         DES d = new DES(subKeys);
         BitSet encrypted = d.cypherOneBlock(message);
         String encStr = bo.bitSetToString(encrypted);
-        System.out.println("ENC:");
-        System.out.println(encStr);
         String hexString = new BigInteger(encStr, 2).toString(16);
-        System.out.println(hexString);
-
-        // encryption reverted
-        DES dR = new DES(subKeysR);
-        BitSet encryptedR = d.cypherOneBlock(messageR);
-        String encStrR = bo.bitSetToString(encryptedR);
-        System.out.println("ENC reverted:");
-        System.out.println(encStrR);
-        String hexStringR = new BigInteger(encStrR, 2).toString(16);
-        System.out.println(hexStringR);
-
-        String expectedOutput = "6d55ddbc8dea95ff";
-        boolean isEncCorrect = hexString.equals(expectedOutput);
-        boolean isEncRevertedCorrect = hexStringR.equals(expectedOutput);
-        boolean isEitherCorrect = isEncCorrect || isEncRevertedCorrect;
-        assertEquals(hexString, isEitherCorrect);
+        assertEquals(hexString, "6d55ddbc8dea95ff");
     }
 
     @Test
@@ -183,7 +116,7 @@ class DESTest {
         List<BitSet> subKeyReversed = bo.reverseKeysOrder(subKeys);
         DES desDecrypt = new DES(subKeyReversed);
         BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
-
+        assertEquals(decrypted, message);
     }
 
     @Test

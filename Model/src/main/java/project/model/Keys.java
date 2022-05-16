@@ -20,7 +20,7 @@ public class Keys {
             63, 55, 47, 39, 31, 23, 15,
             7,  62, 54, 46, 38, 30, 22,
             14,  6, 61, 53, 45, 37, 29,
-            21, 13, 13, 28, 20, 12,  4
+            21, 13, 5, 28, 20, 12,  4
     };
 
     public int[] PC2KeyPermutationTable = {
@@ -50,7 +50,6 @@ public class Keys {
     }
 
     public List<BitSet> generate16keys(BitSet key) {
-        key = removeParityBitsFromKey(key);
         BitSet permutedKey = bo.permutation(key, PC1KeyPermutationTable);
         BitSet[] splitKey = bo.split(permutedKey, 56);
         BitSet leftSubKey = splitKey[0];

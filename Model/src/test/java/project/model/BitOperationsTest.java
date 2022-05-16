@@ -17,21 +17,120 @@ class BitOperationsTest {
     }
 
     @Test
+    public void hexToBitSetTest() {
+        String s = "3D00000000003D13";
+//        BitSet bs = new BitSet();
+        BitSet bs = BitOperations.hexToBitSet(s);
+        BitSet expectedResult = new BitSet();
+        expectedResult.set(2, 6);
+        expectedResult.set(7);
+        expectedResult.set(50, 54);
+        expectedResult.set(55);
+        expectedResult.set(59);
+        expectedResult.set(62);
+        expectedResult.set(63);
+        assertEquals(bs, expectedResult);
+
+        s = "3D00000000003D13F1";
+        BitSet bs2 = BitOperations.hexToBitSet(s);
+        expectedResult.set(64, 68);
+        expectedResult.set(71);
+        assertEquals(bs2, expectedResult);
+    }
+
+    @Test
+    public void bitset2HexTest() {
+        BitSet bs = new BitSet();
+        bs.set(7);
+        bs.set(2, 6);
+        bs.set(50, 54);
+        bs.set(55);
+        bs.set(59);
+        bs.set(62);
+        bs.set(63);
+        String expectedResult = "3D00000000003D13";
+        String s = BitOperations.bitSetToHex(bs);
+        assertEquals(s, expectedResult);
+
+        bs.set(64, 68);
+        bs.set(71);
+        String s2 = BitOperations.bitSetToHex(bs);
+        expectedResult = "3D00000000003D13F1";
+        assertEquals(s2, expectedResult);
+    }
+
+    @Test
+    public void bitSetAsAsciiNumbersTest() {
+        BitSet bs = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            bs.set(7 + i * 8);
+            bs.set(0 + i * 8);
+        }
+        String str = BitOperations.bitSetAsAsciiNumbers(bs);
+    }
+
+    @Test
     public void leftShiftTest() {
-        BitSet subKey = new BitSet(6);
+        BitSet subKey = new BitSet(64);
         subKey.set(0, 2);
         subKey.set(3);
-        assertTrue(subKey.length() <= 6);
-        assertEquals(subKey.cardinality(), 3);
+        BitSet result = bo.leftShift(subKey, 64, 1);
 
-        BitSet result = bo.leftShift(subKey, 6, 1);
-
-        assertTrue(result.length() <= 6);
         assertEquals(result.cardinality(), 3);
-
-        assertTrue(result.get(1));
+        assertTrue(result.get(0));
+        assertTrue(result.get(63));
         assertTrue(result.get(2));
-        assertTrue(result.get(4));
+    }
+
+    @Test
+    public void leftShiftTest_II() {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(63);
+        bs.set(3);
+        BitSet result = bo.leftShift(bs, 64, 1);
+        assertEquals(result.cardinality(), 3);
+        assertTrue(result.get(2));
+        assertTrue(result.get(63));
+        assertTrue(result.get(62));
+    }
+
+    @Test
+    public void leftShiftTest_III() {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(1);
+        bs.set(34);
+        bs.set(63);
+        BitSet result = bo.leftShift(bs, 64, 2);
+
+        assertEquals(result.cardinality(), 4);
+        assertTrue(result.get(63));
+        assertTrue(result.get(62));
+        assertTrue(result.get(32));
+        assertTrue(result.get(61));
+    }
+
+    @Test
+    public void concatenationTest() {
+        BitSet bitSet1 = new BitSet(6);
+        BitSet bitSet2 = new BitSet(6);
+
+        bitSet1.set(0);
+        bitSet1.set(3);
+        bitSet1.set(5);
+
+        bitSet2.set(0);
+        bitSet2.set(5);
+
+        BitSet bitSet3 = new BitSet(12);
+        bitSet3.set(0);
+        bitSet3.set(3);
+        bitSet3.set(5);
+        bitSet3.set(6);
+        bitSet3.set(11);
+
+        assertEquals(bo.concatenation(bitSet1, bitSet2, 6), bitSet3);
     }
 
     @Test
@@ -50,6 +149,15 @@ class BitOperationsTest {
         for(int i = 0; i < 16; i ++) {
             assertEquals(keyList.get(i), reversed.get(15 - i));
         }
+    }
+
+    @Test
+    public void reverseBitOrderTest() {
+        BitSet bs = new BitSet();
+        BitSet rev = BitOperations.reverseBitOrder(bs, 4);
+
+        assertEquals(rev.size(), 64);
+        assertTrue(rev.isEmpty());
     }
 
     @Test
@@ -86,6 +194,43 @@ class BitOperationsTest {
     }
 
     @Test
+    public void splitTestII() {
+        BitSet input = new BitSet(6);
+        input.set(0);
+        input.set(2);
+        input.set(5);
+
+        BitSet result1 = new BitSet(3);
+        BitSet result2 = new BitSet(3);
+        result1.set(0);
+        result1.set(2);
+        result2.set(2);
+
+        assertEquals(bo.split(input, 6)[0], result1);
+        assertEquals(bo.split(input, 6)[1], result2);
+    }
+
+    @Test
+    public void permutationTest_II() {
+        BitSet bs = new BitSet();
+        for(int i = 0; i < 8; i++) {
+            bs.set(1 + i * 8);
+        }
+        Keys k = new Keys();
+        BitSet permuted = bo.permutation(bs, k.PC1KeyPermutationTable);
+
+        assertEquals(permuted.cardinality(), 8);
+        assertTrue(permuted.get(8));
+        assertTrue(permuted.get(9));
+        assertTrue(permuted.get(10));
+        assertTrue(permuted.get(11));
+        assertTrue(permuted.get(12));
+        assertTrue(permuted.get(13));
+        assertTrue(permuted.get(14));
+        assertTrue(permuted.get(15));
+    }
+
+    @Test
     public void permutationTest() {
         BitSet input = new BitSet(64);
         int[] table = {2, 5, 3, 4, 1, 9, 6, 7, 8, 10};
@@ -113,55 +258,122 @@ class BitOperationsTest {
     }
 
     @Test
+    public void permutationTestII() {
+        BitSet input = new BitSet(10);
+        input.set(0); //ok
+        input.set(3); //
+        input.set(5); //ok
+        input.set(7);
+        input.set(9); //ok
+
+        int[] table = {10, 6, 9, 5, 3, 2, 8, 7, 4, 1};
+        BitSet result = new BitSet(10);
+        result.set(0);
+        result.set(1);
+        result.set(6);
+        result.set(8);
+        result.set(9);
+
+        assertEquals(bo.permutation(input, table), result);
+    }
+
+    @Test
     public void bitSetToIntTest() {
         BitSet bs = new BitSet();
         bs.set(0);
         bs.set(4);
-        int v = bo.bitSetToInt(bs, 5);
+        int v = BitOperations.bitSetToInt(bs, 5);
         assertEquals(v, 17);
 
-        bs.set(1);
-        v = bo.bitSetToInt(bs, 5);
-        assertEquals(v, 25);
-
         bs.clear();
+        bs.set(0);
+        v = BitOperations.bitSetToInt(bs, 8);
+        assertEquals(v, 128);
+
     }
 
     @Test
     public void intToBitSetTest() {
         int v = 3;
-        BitSet bs = bo.intToBitSet(v, 4);
+        BitSet bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 2);
         assertTrue(bs.get(2));
         assertTrue(bs.get(3));
 
         v = 8;
-        bs = bo.intToBitSet(v, 4);
+        bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 1);
         assertTrue(bs.get(0));
 
         v = 1;
-        bs = bo.intToBitSet(v, 4);
+        bs = BitOperations.intToBitSet(v, 4);
         assertEquals(bs.cardinality(), 1);
         assertTrue(bs.get(3));
     }
 
     @Test
-    public void stringToBitSetTest() {
+    public void bitSetToStringASCIITest() {
         BitSet bs = new BitSet();
-        String testString = "ok"; //1101111 1101011
-        bs = bo.bitSetFromStringASCII(testString);
-
-        String result="11011111101011";
-        StringBuilder stringBuilder = new StringBuilder(result);
-        stringBuilder = stringBuilder.reverse();
-        BitSet bsResult = new BitSet();
-        for(int i = 0; i < result.length(); i++) {
-            if(stringBuilder.toString().charAt(i) == '1') {
-                bsResult.set(i);
+        for (int i = 0; i < 14; i++) {
+                bs.set(1 + i * 8);
+            if(i % 2 == 0) {
+                bs.set(5 + i * 8);
+            } else {
+                bs.set(7 + i * 8);
             }
         }
-        assertEquals(BitOperations.bitSetToStringASCII(bsResult), "ok");
-        assertEquals(bs, bsResult);
+
+        assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADADADADA");
+    }
+
+    @Test
+    public void stringASCIIToBitSetTest_II() {
+        String str = "ÖÄð½ÅC";
+        BitSet bs = BitOperations.stringASCIIToBitSet(str);
+
+        BitSet key1 = new BitSet(); // (string "LLLLLLLL")
+        BitSet key2 = new BitSet(); // (string "AAAAAAAA")
+        BitSet key3 = new BitSet(); // (string "DDDDDDDD")
+        for(int i = 0; i < 8; i++) {
+            key1.set(1 + i * 8);
+            key1.set(4 + i * 8);
+            key1.set(5 + i * 8);
+            key2.set(1 + i * 8);
+            key2.set(7 + i * 8);
+            key3.set(1 + i * 8);
+            key3.set(5 + i * 8);
+        }
+
+        TripleDES tripleDes = new TripleDES(key1, key2, key3);
+        BitSet decrypted = tripleDes.decrypt(bs);
+        BitOperations bo = new BitOperations();
+        String decStr = bo.bitSetToString(decrypted);
+        String decASCII = BitOperations.bitSetToStringASCII(decrypted);
+    }
+
+
+    @Test
+    public void stringASCIIToBitSetTest() {
+        String testString = "ok"; //01101111 01101011
+        BitSet bs = BitOperations.stringASCIIToBitSet(testString);
+
+        assertEquals(bs.cardinality(), 11);
+        assertFalse(bs.get(0));
+        assertFalse(bs.get(3));
+        assertFalse(bs.get(8));
+        assertFalse(bs.get(11));
+        assertFalse(bs.get(13));
+
+        String ts = "PPPPPPBBBBB"; // 01010000 01010000 01010000 01010000 01010000 01010000 01000010 01000010 01000010 01000010 01000010
+        bs.clear();
+        bs = BitOperations.stringASCIIToBitSet(ts);
+        assertEquals(bs.cardinality(), 22);
+        for (int i = 0; i < 11; i++) {
+            assertTrue(bs.get(1 + i * 8));
+            if(i < 6)
+                assertTrue(bs.get(3 + i * 8));
+            if(i >= 6)
+                assertTrue(bs.get(6 + i * 8));
+        }
     }
 }
