@@ -1,6 +1,8 @@
 package project.model;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -46,7 +48,21 @@ public class BitOperations {
         return left;
     }
 
-    public BitSet[] split(BitSet block, int size) {
+    public ArrayList<BitSet> splitIntoParts(BitSet bs) {
+        int count = bs.size() / 64;
+        ArrayList<BitSet> result = new ArrayList<>();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        for(int i = 0; i < count; i++) {
+            BitSet part = new BitSet();
+            for(int j = 0; j < 64; j++) {
+                if()
+            }
+        }
+
+        return result;
+    }
+
+    public BitSet[] splitInHalf(BitSet block, int size) {
         int splitIndex = size / 2;
         BitSet l = block.get(0, splitIndex);
         BitSet r = block.get(splitIndex, size);
@@ -175,6 +191,7 @@ public class BitOperations {
         return result.toString();
     }
 
+    // nie trzeba zmieniać
     public static BitSet intToBitSet(int value, int len) {
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
@@ -203,6 +220,7 @@ public class BitOperations {
         return result;
     }
 
+    // OK raczej
     public static String bitSetToStringASCII(BitSet bits) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < bits.size()/8; i++) {
@@ -226,7 +244,7 @@ public class BitOperations {
         return result.toString();
     }
 
-    public static String bitSetAsAsciiNumbers(BitSet bs) {
+    /*public static String bitSetAsAsciiNumbers(BitSet bs) {
         if(bs.size() != 64)
             return "BitSet size != 64";
 
@@ -246,5 +264,5 @@ public class BitOperations {
             sb.append(" ");
         }
         return sb.toString();
-    }
+    }*/
 }

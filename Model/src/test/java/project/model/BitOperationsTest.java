@@ -59,7 +59,7 @@ class BitOperationsTest {
         assertEquals(s2, expectedResult);
     }
 
-    @Test
+    /*@Test
     public void bitSetAsAsciiNumbersTest() {
         BitSet bs = new BitSet();
         for(int i = 0; i < 8; i++) {
@@ -67,7 +67,7 @@ class BitOperationsTest {
             bs.set(0 + i * 8);
         }
         String str = BitOperations.bitSetAsAsciiNumbers(bs);
-    }
+    }*/
 
     @Test
     public void leftShiftTest() {
@@ -180,7 +180,7 @@ class BitOperationsTest {
         input.set(0);
         input.set(30, 34);
         assertEquals(input.cardinality(), 5);
-        BitSet[] split = bo.split(input, 64);
+        BitSet[] split = bo.splitInHalf(input, 64);
 
         assertTrue(split[0].get(0));
         assertTrue(split[0].get(30));
@@ -206,8 +206,8 @@ class BitOperationsTest {
         result1.set(2);
         result2.set(2);
 
-        assertEquals(bo.split(input, 6)[0], result1);
-        assertEquals(bo.split(input, 6)[1], result2);
+        assertEquals(bo.splitInHalf(input, 6)[0], result1);
+        assertEquals(bo.splitInHalf(input, 6)[1], result2);
     }
 
     @Test
@@ -322,7 +322,6 @@ class BitOperationsTest {
                 bs.set(7 + i * 8);
             }
         }
-
         assertEquals(BitOperations.bitSetToStringASCII(bs), "DADADADADADADA");
     }
 

@@ -1,5 +1,6 @@
 package project.model;
 
+import java.io.ByteArrayOutputStream;
 import java.util.BitSet;
 import java.util.List;
 
@@ -166,9 +167,15 @@ public class DES {
         return halfBlock;
     }
 
+    public BitSet cypher(BitSet bits) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        return result;
+    }
+
     public BitSet cypherOneBlock(BitSet bits) {
         bits = bo.permutation(bits, initialPermutationTable);
-        BitSet[] split = bo.split(bits, 64);
+        BitSet[] split = bo.splitInHalf(bits, 64);
         BitSet left = split[0];
         BitSet right = split[1];
 

@@ -56,7 +56,7 @@ class TripleDESTest {
         }
         TripleDES tripleDES = new TripleDES(keys.get(0), keys.get(1), keys.get(2));
 
-        String[] msg = {"Michal", "Magda", "kOpeRnik", "7e2_z6!", "b", "@@@oKp", "   [    "};
+        String[] msg = {"Michal", "Magda", "kOpeRnik", "7e2_z6!", "b", "@@@oKp", "   [    ", "nabuchodonozor"};
         ArrayList<String> decrypted = new ArrayList<>();
         for(String s : msg) {
             BitSet bs = BitOperations.stringASCIIToBitSet(s);
