@@ -2,6 +2,7 @@ package project.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +58,31 @@ class BitOperationsTest {
         String s2 = BitOperations.bitSetToHex(bs);
         expectedResult = "3D00000000003D13F1";
         assertEquals(s2, expectedResult);
+    }
+
+    @Test
+    public void splitIntoPartsTest() {
+        BitSet originalBS = new BitSet(192);
+        originalBS.set(4);
+        originalBS.set(60);
+        originalBS.set(63);
+        originalBS.set(64);
+        originalBS.set(70);
+        originalBS.set(140);
+        ArrayList<BitSet> parts =  BitOperations.splitIntoParts(originalBS);
+        BitSet bs1 = parts.get(0);
+        BitSet bs2 = parts.get(1);
+        BitSet bs3 = parts.get(2);
+
+        assertTrue(bs1.get(4));
+        assertTrue(bs1.get(60));
+        assertTrue(bs1.get(63));
+        assertTrue(bs2.get(0));
+        assertTrue(bs2.get(6));
+        assertTrue(bs3.get(12));
+        assertEquals(bs1.cardinality(), 3);
+        assertEquals(bs2.cardinality(), 2);
+        assertEquals(bs3.cardinality(), 1);
     }
 
     /*@Test

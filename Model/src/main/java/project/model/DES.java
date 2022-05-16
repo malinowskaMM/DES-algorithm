@@ -1,6 +1,7 @@
 package project.model;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
@@ -168,12 +169,15 @@ public class DES {
     }
 
     public BitSet cypher(BitSet bits) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-        return result;
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        ArrayList<BitSet> bitSets = BitOperations.splitIntoParts(bits);
+        for (BitSet b : bitSets) {
+            result.writeBytes(cypherSingleBlock(b).toByteArray());
+        }
+        return BitSet.valueOf(result.toByteArray());
     }
 
-    public BitSet cypherOneBlock(BitSet bits) {
+    public BitSet cypherSingleBlock(BitSet bits) {
         bits = bo.permutation(bits, initialPermutationTable);
         BitSet[] split = bo.splitInHalf(bits, 64);
         BitSet left = split[0];

@@ -19,20 +19,20 @@ public class TripleDES {
     public BitSet encrypt(BitSet message) {
         BitOperations bo = new BitOperations();
         DES d1 = new DES(subKeysOne);
-        BitSet m1 = d1.cypherOneBlock(message);
+        BitSet m1 = d1.cypher(message);
         DES d2 = new DES(bo.reverseKeysOrder(subKeysTwo));
-        BitSet m2 = d2.cypherOneBlock(m1);
+        BitSet m2 = d2.cypher(m1);
         DES d3 = new DES(subKeysThree);
-        return d3.cypherOneBlock(m2);
+        return d3.cypher(m2);
     }
 
     public BitSet decrypt(BitSet message) {
         BitOperations bo = new BitOperations();
         DES d1 = new DES(bo.reverseKeysOrder(subKeysThree));
-        BitSet m1 = d1.cypherOneBlock(message);
+        BitSet m1 = d1.cypher(message);
         DES d2 = new DES(subKeysTwo);
-        BitSet m2 = d2.cypherOneBlock(m1);
+        BitSet m2 = d2.cypher(m1);
         DES d3 = new DES(bo.reverseKeysOrder(subKeysOne));
-        return d3.cypherOneBlock(m2);
+        return d3.cypher(m2);
     }
 }

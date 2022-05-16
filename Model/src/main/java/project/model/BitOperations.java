@@ -48,15 +48,16 @@ public class BitOperations {
         return left;
     }
 
-    public ArrayList<BitSet> splitIntoParts(BitSet bs) {
+    public static ArrayList<BitSet> splitIntoParts(BitSet bs) {
         int count = bs.size() / 64;
         ArrayList<BitSet> result = new ArrayList<>();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         for(int i = 0; i < count; i++) {
             BitSet part = new BitSet();
             for(int j = 0; j < 64; j++) {
-                if()
+                if(bs.get(j + 64 * i))
+                    part.set(j);
             }
+            result.add(part);
         }
 
         return result;
@@ -143,6 +144,7 @@ public class BitOperations {
                 if(bs.get(i - j)) {
                     allZeros = false;
                     firstBitSetFound = true;
+                    break;
                 }
             }
             if(allZeros)

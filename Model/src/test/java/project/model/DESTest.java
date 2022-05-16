@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -71,7 +69,7 @@ class DESTest {
 
         // encryption
         DES d = new DES(subKeys);
-        BitSet encrypted = d.cypherOneBlock(message);
+        BitSet encrypted = d.cypherSingleBlock(message);
         String encStr = bo.bitSetToString(encrypted);
         String hexString = new BigInteger(encStr, 2).toString(16);
         assertEquals(hexString, "6d55ddbc8dea95ff");
@@ -104,8 +102,8 @@ class DESTest {
 
         List<BitSet> subKeys = k.generate16keys(key);
         DES desEncrypt = new DES(subKeys);
-        BitSet encrypted = desEncrypt.cypherOneBlock(message);
-        BitSet encrypted1 = desEncrypt.cypherOneBlock(message1);
+        BitSet encrypted = desEncrypt.cypherSingleBlock(message);
+        BitSet encrypted1 = desEncrypt.cypherSingleBlock(message1);
 
         assertNotEquals(encrypted, encrypted1);
 
@@ -115,7 +113,7 @@ class DESTest {
         BitOperations bo = new BitOperations();
         List<BitSet> subKeyReversed = bo.reverseKeysOrder(subKeys);
         DES desDecrypt = new DES(subKeyReversed);
-        BitSet decrypted = desDecrypt.cypherOneBlock(encrypted);
+        BitSet decrypted = desDecrypt.cypherSingleBlock(encrypted);
         assertEquals(decrypted, message);
     }
 
