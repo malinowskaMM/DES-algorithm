@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="610.0" maxWidth="678.0" minHeight="610.0" minWidth="678.0" opacity="0.93" prefHeight="610.0" prefWidth="678.0" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.HelloController">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="610.0" maxWidth="678.0" minHeight="610.0" minWidth="678.0" opacity="0.93" prefHeight="610.0" prefWidth="678.0" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.HelloController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -52,6 +52,8 @@
                   <Font size="51.0" />
                </font>
             </Label>
+            <Button layoutX="297.0" layoutY="500.0" mnemonicParsing="false" onAction="#encryptFile" prefHeight="25.0" prefWidth="92.0" text="Szyfruj plik" />
+            <Button layoutX="297.0" layoutY="538.0" mnemonicParsing="false" onAction="#decryptFile" prefHeight="25.0" prefWidth="92.0" text="Deszyfruj plik" />
          </children>
       </AnchorPane>
    </children>

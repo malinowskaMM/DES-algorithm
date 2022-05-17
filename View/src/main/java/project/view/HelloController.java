@@ -1,15 +1,18 @@
 package project.view;
 import java.io.*;
+import org.apache.commons.io.FileUtils;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.BitSet;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javax.swing.JFileChooser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import project.model.*;
 
-public class HelloController {
+public class HelloController extends Window {
     TripleDES tripleDES;
     Key key;
     StringBuilder plaintextStringBuilder;
@@ -23,6 +26,7 @@ public class HelloController {
     BitSet encrypted;
     BitSet decrypted;
     BitOperations bitOperations;
+    private FileChooser fileChooser = new FileChooser();
     @FXML private TextArea plaintextArea;
     @FXML private TextArea cryptogramArea;
     @FXML private  TextField key1Field;
@@ -36,7 +40,7 @@ public class HelloController {
         while( (i=fileReader.read()) != -1 ) {
             textBuilder.append((char)i);
         }
-        byteArea =textBuilder.toString().getBytes(StandardCharsets.UTF_8);
+        byteArea = textBuilder.toString().getBytes(StandardCharsets.UTF_8);
         //uważać na błedy z buforem - czy na pewno on jest pusty przy ponownym ładowaniu
         return byteArea;
     }
@@ -66,6 +70,98 @@ public class HelloController {
         textField.setText(s);
         return key;
     }
+
+    @FXML public void encryptFile(ActionEvent actionEvent) {
+        //AES -> Anon
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(this);
+        try {
+            byte[] fileBytes = FileUtils.readFileToByteArray(selectedFile);
+
+            tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+            BitSet encryptedBS = tripleDES.encrypt(BitSet.valueOf(fileBytes));
+            byte[] encodedBytes = encryptedBS.toByteArray();
+
+            File destination = fileChooser.showSaveDialog(this);
+            FileUtils.writeByteArrayToFile(destination, encodedBytes);
+//            notificationEncryptionLabel.setTextFill(Color.web("#00FF00"));
+//            notificationEncryptionLabel.setText("File encrypted successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+//            notificationEncryptionLabel.setTextFill(Color.web("#FF0000"));
+//            notificationEncryptionLabel.setText("Error occured :(");
+        }
+    }
+
+    @FXML public void decryptFile(ActionEvent actionEvent) {
+        // DES->Anon
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(this);
+        try {
+            byte[] fileBytes = FileUtils.readFileToByteArray(selectedFile);
+
+            tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+            BitSet decryptedBS = tripleDES.decrypt(BitSet.valueOf(fileBytes));
+            byte[] decodedBytes = decryptedBS.toByteArray();
+
+            File destination = fileChooser.showSaveDialog(this);
+            FileUtils.writeByteArrayToFile(destination, decodedBytes);
+//            notificationDecryptionLabel.setTextFill(Color.web("#00FF00"));
+//            notificationDecryptionLabel.setText("File decrypted successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+//            notificationDecryptionLabel.setTextFill(Color.web("#FF0000"));
+//            notificationDecryptionLabel.setText("Error occured :(");
+        }
+    }
+    @FXML private void encryptFileAnon() throws IOException {
+        // DES->Anon
+        try {
+            File toOpenFile = fileChooser.showOpenDialog(this);
+//            if (valueKeyText.getText().equals("")) {
+//                valueKeyText.setText(DES.generateKeys());
+//            }
+            if(key1Field.getText().isEmpty() || key2Field.getText().isEmpty() || key3Field.getText().isEmpty())
+                generateAllKeys(null);
+            tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+            File newFile = fileChooser.showSaveDialog(this);
+            FileOutputStream fos = new FileOutputStream(newFile);
+            byte[] b =  Files.readAllBytes(toOpenFile.toPath());
+             BitSet bitSetEnc = tripleDES.encrypt(BitSet.valueOf(b));
+            fos.write(bitSetEnc.toByteArray());
+            fos.close();
+//            nameOfFileWithoutEncryption.setText(toOpenFile.getAbsolutePath());
+//            nameOfFileEncryptedFile.setText(newFile.getAbsolutePath());
+//            komunikat2.setText("Zaszyfrowany plik zapisano do: " + newFile.getName());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void decryptFileAnon() {
+        // DES->Anon
+        try {
+            File openFile = fileChooser.showOpenDialog(this);
+//            if (valueKeyText.getText().equals("")) {
+//                valueKeyText.setText(DES.generateKeys());
+//            }
+            File newFile = fileChooser.showSaveDialog(this);
+            FileOutputStream fos = new FileOutputStream(newFile);
+
+            tripleDES = new TripleDES(BitOperations.stringASCIIToBitSet(key1Field.getText()), BitOperations.stringASCIIToBitSet(key2Field.getText()), BitOperations.stringASCIIToBitSet(key3Field.getText()));
+            byte[] b =  Files.readAllBytes(openFile.toPath());
+            BitSet bitSetEc = tripleDES.encrypt(BitSet.valueOf(b));
+
+            fos.write(bitSetEc.toByteArray());
+            fos.close();
+//            nameOfFileWithoutEncryption1.setText(openFile.getAbsolutePath());
+//            nameOfFileEncryptedFile1.setText(newFile.getAbsolutePath());
+//            komunikat1.setText("Odszyfrowany plik zapisano do: " + newFile.getName());
+        } catch (NullPointerException | IOException e) {
+//            komunikat2.setText("Nie można odczytać pliku");
+        }
+    }
+
 
     @FXML private void saveKeysToFile() {
         JFileChooser jfc = new JFileChooser();
