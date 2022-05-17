@@ -2,6 +2,7 @@ package project.model;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -120,7 +121,7 @@ public class BitOperations {
 
     public String bitSetToString(BitSet bs) {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < bs.size(); i++) {
+        for (int i = 0; i < 64; i++) {
             if(bs.get(i)) {
                 result.append("1");
             } else {
@@ -187,20 +188,19 @@ public class BitOperations {
         return result.toString();
     }
 
-    public static BitSet intToBitSet(int value, int len) {
+    public static BitSet intToBitSet(int value, int len) { //na bank poprawna
         BitSet result = new BitSet();
         for(int i = 0; i < len; i++) {
             int v = (((value % 2) == 0) ? 0 : 1);
-            if(v == 1) {
+            if (v == 1) {
                 result.set(len - i - 1);
             }
             value /= 2;
         }
-
         return result;
     }
 
-    public static BitSet stringASCIIToBitSet(String str) {
+    public static BitSet stringASCIIToBitSet(String str) { //na bank poprawna
         BitSet result = new BitSet();
         for (int i = 0; i < str.length(); i++) {
             int v = str.charAt(i);
@@ -213,6 +213,7 @@ public class BitOperations {
         }
         return result;
     }
+
 
     public static String bitSetToStringASCII(BitSet bits) {
         StringBuilder result = new StringBuilder();

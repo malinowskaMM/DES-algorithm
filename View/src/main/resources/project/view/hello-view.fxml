@@ -52,8 +52,8 @@
                   <Font size="51.0" />
                </font>
             </Label>
-            <Button layoutX="297.0" layoutY="500.0" mnemonicParsing="false" onAction="#encryptFile" prefHeight="25.0" prefWidth="92.0" text="Szyfruj plik" />
-            <Button layoutX="297.0" layoutY="538.0" mnemonicParsing="false" onAction="#decryptFile" prefHeight="25.0" prefWidth="92.0" text="Deszyfruj plik" />
+            <Button layoutX="297.0" layoutY="500.0" mnemonicParsing="false" onAction="#encryptFile" style="-fx-background-color: #727272;" prefHeight="25.0"  prefWidth="92.0" text="Szyfruj plik" textFill="WHITE"/>
+            <Button layoutX="297.0" layoutY="538.0" mnemonicParsing="false" onAction="#decryptFile" style="-fx-background-color: #727272;" prefHeight="25.0" prefWidth="92.0" text="Deszyfruj plik" textFill="WHITE"/>
          </children>
       </AnchorPane>
    </children>

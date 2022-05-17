@@ -3,6 +3,7 @@ import java.io.*;
 import org.apache.commons.io.FileUtils;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.BitSet;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -70,6 +71,7 @@ public class HelloController extends Window {
         textField.setText(s);
         return key;
     }
+
 
     @FXML public void encryptFile(ActionEvent actionEvent) {
         //AES -> Anon
